@@ -42,7 +42,7 @@ exports.buildKeymap = buildKeymap
 //   : Can be used to [adjust](#buildKeymap) the key bindings created.
 exports.exampleSetup = new Plugin(class {
   constructor(pm, options) {
-    pm.wrapper.classList.add(className)
+    pm.view.wrapper.classList.add(className)
     this.keymap = buildKeymap(pm.schema, options.mapKeys)
     pm.addKeymap(baseKeymap, -100)
     pm.addKeymap(this.keymap)
@@ -72,7 +72,7 @@ exports.exampleSetup = new Plugin(class {
       historyPlugin.attach(pm)
   }
   detach(pm) {
-    pm.wrapper.classList.remove(className)
+    pm.view.wrapper.classList.remove(className)
     pm.removeKeymap(baseKeymap)
     pm.removeKeymap(this.keymap)
     let rules = inputRules.ensure(pm)
