@@ -6,7 +6,7 @@ const {TableRow} = require("../schema-table")
 const {selectNextCell, selectPreviousCell} = require("../commands-table")
 const {wrapInList, splitListItem, liftListItem, sinkListItem} = require("../commands-list")
 
-// :: (Schema, ?Object) → Keymap
+// :: (Schema, ?Object) → Object
 // Inspect the given schema looking for marks and nodes from the
 // basic schema, and if found, add key bindings related to them.
 // This will add:
