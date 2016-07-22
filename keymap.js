@@ -1,4 +1,3 @@
-const Keymap = require("browserkeymap")
 const {HardBreak, BulletList, OrderedList, ListItem, BlockQuote, HorizontalRule, Paragraph, CodeBlock, Heading,
        StrongMark, EmMark, CodeMark} = require("../schema-basic")
 const browser = require("../util/browser")
@@ -12,20 +11,20 @@ const {wrapInList, splitListItem, liftListItem, sinkListItem} = require("../comm
 // basic schema, and if found, add key bindings related to them.
 // This will add:
 //
-// * **Mod-B** for toggling [strong](#StrongMark)
-// * **Mod-I** for toggling [emphasis](#EmMark)
-// * **Mod-\`** for toggling [code font](#CodeMark)
-// * **Ctrl-Shift-0** for making the current textblock a paragraph
-// * **Ctrl-Shift-1** to **Ctrl-Shift-6** for making the current
+// * **Mod-KeyB** for toggling [strong](#StrongMark)
+// * **Mod-KeyI** for toggling [emphasis](#EmMark)
+// * **Mod-Backquote** for toggling [code font](#CodeMark)
+// * **Ctrl-Shift-Digit0** for making the current textblock a paragraph
+// * **Ctrl-Shift-Digit1** to **Ctrl-Shift-Digit6** for making the current
 //   textblock a heading of the corresponding level
-// * **Ctrl-Shift-\\** to make the current textblock a code block
-// * **Ctrl-Shift-8** to wrap the selection in an ordered list
-// * **Ctrl-Shift-9** to wrap the selection in a bullet list
-// * **Ctrl-Shift-.** to wrap the selection in a block quote
+// * **Ctrl-Shift-Backslash** to make the current textblock a code block
+// * **Ctrl-Shift-Digit8** to wrap the selection in an ordered list
+// * **Ctrl-Shift-Digit9** to wrap the selection in a bullet list
+// * **Ctrl-Shift-Period** to wrap the selection in a block quote
 // * **Enter** to split a non-empty textblock in a list item while at
 //   the same time splitting the list item
 // * **Mod-Enter** to insert a hard break
-// * **Mod-Shift-minus** to insert a horizontal rule
+// * **Mod-Shift-Minus** to insert a horizontal rule
 //
 // You can suppress or map these bindings by passing a `mapKeys`
 // argument, which maps key names (say `"Mod-B"` to either `false`, to
@@ -44,20 +43,20 @@ function buildKeymap(schema, mapKeys) {
   for (let name in schema.marks) {
     let mark = schema.marks[name]
     if (mark instanceof StrongMark)
-      bind("Mod-B", toggleMark(mark))
+      bind("Mod-KeyB", toggleMark(mark))
     if (mark instanceof EmMark)
-      bind("Mod-I", toggleMark(mark))
+      bind("Mod-KeyI", toggleMark(mark))
     if (mark instanceof CodeMark)
-      bind("Mod-`", toggleMark(mark))
+      bind("Mod-Backquote", toggleMark(mark))
   }
   for (let name in schema.nodes) {
     let node = schema.nodes[name]
     if (node instanceof BulletList)
-      bind("Shift-Ctrl-8", wrapInList(node))
+      bind("Shift-Ctrl-Digit8", wrapInList(node))
     if (node instanceof OrderedList)
-      bind("Shift-Ctrl-9", wrapInList(node))
+      bind("Shift-Ctrl-Digit9", wrapInList(node))
     if (node instanceof BlockQuote)
-      bind("Shift-Ctrl-.", wrapIn(node))
+      bind("Shift-Ctrl-Period", wrapIn(node))
     if (node instanceof HardBreak) {
       let cmd = chainCommands(newlineInCode,
                               pm => pm.tr.replaceSelection(node.create()).applyAndScroll())
@@ -67,23 +66,23 @@ function buildKeymap(schema, mapKeys) {
     }
     if (node instanceof ListItem) {
       bind("Enter", splitListItem(node))
-      bind("Mod-[", liftListItem(node))
-      bind("Mod-]", sinkListItem(node))
+      bind("Mod-BracketLeft", liftListItem(node))
+      bind("Mod-BracketRight", sinkListItem(node))
     }
     if (node instanceof Paragraph)
-      bind("Shift-Ctrl-0", setBlockType(node))
+      bind("Shift-Ctrl-Digit0", setBlockType(node))
     if (node instanceof CodeBlock)
-      bind("Shift-Ctrl-\\", setBlockType(node))
+      bind("Shift-Ctrl-Backslash", setBlockType(node))
     if (node instanceof Heading) for (let i = 1; i <= 6; i++)
-      bind("Shift-Ctrl-" + i, setBlockType(node, {level: i}))
+      bind("Shift-Ctrl-Digit" + i, setBlockType(node, {level: i}))
     if (node instanceof HorizontalRule)
-      bind("Mod-Shift--", pm => pm.tr.replaceSelection(node.create()).applyAndScroll())
+      bind("Mod-Shift-Minus", pm => pm.tr.replaceSelection(node.create()).applyAndScroll())
 
     if (node instanceof TableRow) {
       bind("Tab", selectNextCell)
       bind("Shift-Tab", selectPreviousCell)
     }
   }
-  return new Keymap(keys)
+  return keys
 }
 exports.buildKeymap = buildKeymap
