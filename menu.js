@@ -1,69 +1,71 @@
 const {StrongMark, EmMark, CodeMark, LinkMark, Image, BulletList, OrderedList, BlockQuote,
        Heading, Paragraph, CodeBlock, HorizontalRule} = require("../schema-basic")
-const {toggleMarkItem, insertItem, wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
+const {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
        selectParentNodeItem, undoItem, redoItem, icons, MenuItem} = require("../menu")
-const {wrapInList} = require("../commands-list")
 const {Table, TableRow, createTable} = require("../schema-table")
+const {toggleMark} = require("../commands")
+const {wrapInList} = require("../commands-list")
 const {addColumnBefore, addColumnAfter, removeColumn, addRowBefore, addRowAfter, removeRow} = require("../commands-table")
-const {FieldPrompt, TextField} = require("../prompt")
+const {TextField, openPrompt} = require("../prompt")
 const {copyObj} = require("../util/obj")
 
 // Helpers to create specific types of items
 
-// : (ProseMirror, (attrs: ?Object))
-// A function that will prompt for the attributes of a [link
-// mark](#LinkMark) (using `FieldPrompt`), and call a callback with
-// the result.
-function promptLinkAttrs(pm, callback) {
-  new FieldPrompt(pm, "Create a link", {
-    href: new TextField({
-      label: "Link target",
-      required: true,
-      clean: (val) => {
-        if (!/^https?:\/\//i.test(val))
-          val = 'http://' + val
-        return val
-      }
-    }),
-    title: new TextField({label: "Title"})
-  }).open(callback)
+function canInsert(state, nodeType, attrs) {
+  let $from = state.selection.$from
+  for (let d = $from.depth; d >= 0; d--) {
+    let index = $from.index(d)
+    if ($from.node(d).canReplaceWith(index, index, nodeType, attrs)) return true
+  }
+  return false
 }
 
-// : (ProseMirror, (attrs: ?Object))
-// A function that will prompt for the attributes of an [image
-// node](#Image) (using `FieldPrompt`), and call a callback with the
-// result.
-function promptImageAttrs(pm, callback, nodeType) {
-  let {node, from, to} = pm.selection, attrs = nodeType && node && node.type == nodeType && node.attrs
-  new FieldPrompt(pm, "Insert image", {
-    src: new TextField({label: "Location", required: true, value: attrs && attrs.src}),
-    title: new TextField({label: "Title", value: attrs && attrs.title}),
-    alt: new TextField({label: "Description",
-                        value: attrs ? attrs.title : pm.doc.textBetween(from, to, " ")})
-  }).open(callback)
+function insertImageItem(nodeType) {
+  return new MenuItem({
+    title: "Insert image",
+    label: "Image",
+    select(state) { return canInsert(state, nodeType) },
+    run(state, onAction) {
+      let {node, from, to} = state.selection, attrs = nodeType && node && node.type == nodeType && node.attrs
+      openPrompt({
+        title: "Insert image",
+        fields: {
+          src: new TextField({label: "Location", required: true, value: attrs && attrs.src}),
+          title: new TextField({label: "Title", value: attrs && attrs.title}),
+          alt: new TextField({label: "Description",
+                              value: attrs ? attrs.title : state.doc.textBetween(from, to, " ")})
+        },
+        onAction,
+        onSubmit(attrs, state, onAction) {
+          onAction(state.tr.replaceSelection(nodeType.createAndFill(attrs)).action())
+        }
+      })
+    }
+  })
 }
 
 function positiveInteger(value) {
   if (!/^[1-9]\d*$/.test(value)) return "Should be a positive integer"
 }
 
-function promptTableSize(pm, callback) {
-  new FieldPrompt(pm, "Insert table", {
-    rows: new TextField({label: "Rows", validate: positiveInteger}),
-    cols: new TextField({label: "Columns", validate: positiveInteger})
-  }).open(callback)
-}
-
 function insertTableItem(tableType) {
   return new MenuItem({
     title: "Insert a table",
-    run(pm) {
-      promptTableSize(pm, ({rows, cols}) => {
-        pm.tr.replaceSelection(createTable(tableType, +rows, +cols)).applyAndScroll()
+    run(_, onAction) {
+      openPrompt({
+        title: "Insert table",
+        fields: {
+          rows: new TextField({label: "Rows", validate: positiveInteger}),
+          cols: new TextField({label: "Columns", validate: positiveInteger})
+        },
+        onAction,
+        onSubmit({rows, cols}, state, onAction) {
+          onAction(state.tr.replaceSelection(createTable(tableType, +rows, +cols)).scrollAction())
+        }
       })
     },
-    select(pm) {
-      let $from = pm.selection.$from
+    select(state) {
+      let $from = state.selection.$from
       for (let d = $from.depth; d >= 0; d--) {
         let index = $from.index(d)
         if ($from.node(d).canReplaceWith(index, index, tableType)) return true
@@ -74,21 +76,56 @@ function insertTableItem(tableType) {
   })
 }
 
-function simpleItem(label, cmd) {
-  return new MenuItem({
-    title: label,
-    label,
+function cmdItem(cmd, options) {
+  return new MenuItem(copyObj(options, {
+    label: options.title,
     run: cmd,
-    select(pm) { return cmd(pm, false) }
+    select(state) { return cmd(state) }
+  }))
+}
+
+function markActive(state, type) {
+  let {from, to, empty} = state.selection
+  if (empty) return type.isInSet(state.storedMarks || state.doc.marksAt(from))
+  else return state.doc.rangeHasMark(from, to, type)
+}
+
+function markItem(markType, options) {
+  return cmdItem(toggleMark(markType), copyObj(options, {
+    active(state) { return markActive(state, markType) }
+  }))
+}
+
+function linkItem(markType) {
+  return markItem(markType, {
+    title: "Add or remove link",
+    icon: icons.link,
+    run(_, onAction) {
+      openPrompt({
+        title: "Create a link",
+        fields: {
+          href: new TextField({
+            label: "Link target",
+            required: true,
+            clean: (val) => {
+              if (!/^https?:\/\//i.test(val))
+                val = 'http://' + val
+              return val
+            }
+          }),
+          title: new TextField({label: "Title"})
+        },
+        onAction,
+        onSubmit(attrs, state, onAction) {
+          toggleMark(markType, attrs)(state, onAction)
+        }
+      })
+    }
   })
 }
 
 function wrapListItem(nodeType, options) {
-  let command = wrapInList(nodeType, options.attrs)
-  return new MenuItem(copyObj(options, {
-    run: command,
-    select(pm) { return command(pm, false) }
-  }))
+  return cmdItem(wrapInList(nodeType, options.attrs), options)
 }
 
 // :: (Schema) → Object
@@ -163,27 +200,23 @@ function wrapListItem(nodeType, options) {
 // **`fullMenu`**`: [[MenuElement]]`
 //   : An array of arrays of menu elements for use as the full menu
 //     for, for example the [menu bar](#menuBar).
-function buildMenuItems(schema) {
+function buildMenuItems(schema, history) {
   let r = {}
   for (let name in schema.marks) {
     let mark = schema.marks[name]
     if (mark instanceof StrongMark)
-      r.toggleStrong = toggleMarkItem(mark, {title: "Toggle strong style", icon: icons.strong})
+      r.toggleStrong = markItem(mark, {title: "Toggle strong style", icon: icons.strong})
     if (mark instanceof EmMark)
-      r.toggleEm = toggleMarkItem(mark, {title: "Toggle emphasis", icon: icons.em})
+      r.toggleEm = markItem(mark, {title: "Toggle emphasis", icon: icons.em})
     if (mark instanceof CodeMark)
-      r.toggleCode = toggleMarkItem(mark, {title: "Toggle code font", icon: icons.code})
+      r.toggleCode = markItem(mark, {title: "Toggle code font", icon: icons.code})
     if (mark instanceof LinkMark)
-      r.toggleLink = toggleMarkItem(mark, {title: "Add or remove link", icon: icons.link, attrs: promptLinkAttrs})
+      r.toggleLink = linkItem(mark)
   }
   for (let name in schema.nodes) {
     let node = schema.nodes[name]
     if (node instanceof Image)
-      r.insertImage = insertItem(node, {
-        title: "Insert image",
-        label: "Image",
-        attrs: (pm, c) => promptImageAttrs(pm, c, node)
-      })
+      r.insertImage = insertImageItem(node)
     if (node instanceof BulletList)
       r.wrapBulletList = wrapListItem(node, {
         title: "Wrap in bullet list",
@@ -217,19 +250,21 @@ function buildMenuItems(schema) {
           attrs: {level: i}
         })
     if (node instanceof HorizontalRule)
-      r.insertHorizontalRule = insertItem(node, {
+      r.insertHorizontalRule = new MenuItem({
         title: "Insert horizontal rule",
-        label: "Horizontal rule"
+        label: "Horizontal rule",
+        select(state) { return canInsert(state, node) },
+        run(state, onAction) { onAction(state.tr.replaceSelection(node.create()).action()) }
       })
     if (node instanceof Table)
       r.insertTable = insertTableItem(node)
     if (node instanceof TableRow) {
-      r.addRowBefore = simpleItem("Add row before", addRowBefore)
-      r.addRowAfter = simpleItem("Add row after", addRowAfter)
-      r.removeRow = simpleItem("Remove row", removeRow)
-      r.addColumnBefore = simpleItem("Add column before", addColumnBefore)
-      r.addColumnAfter = simpleItem("Add column after", addColumnAfter)
-      r.removeColumn = simpleItem("Remove column", removeColumn)
+      r.addRowBefore = cmdItem(addRowBefore, {title: "Add row before"})
+      r.addRowAfter = cmdItem(addRowAfter, {title: "Add row after"})
+      r.removeRow = cmdItem(removeRow, {title: "Remove row"})
+      r.addColumnBefore = cmdItem(addColumnBefore, {title: "Add column before"})
+      r.addColumnAfter = cmdItem(addColumnAfter, {title: "Add column after"})
+      r.removeColumn = cmdItem(removeColumn, {title: "Remove column"})
     }
   }
 
@@ -245,7 +280,7 @@ function buildMenuItems(schema) {
   r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink]), [r.insertMenu]]
   r.blockMenu = [cut([r.typeMenu, r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
                       liftItem, selectParentNodeItem])]
-  r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem, redoItem]])
+  r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem(history), redoItem(history)]])
 
   return r
 }

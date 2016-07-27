@@ -1,9 +1,10 @@
 const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
        inputRules, allInputRules} = require("../inputrules")
 const {BlockQuote, OrderedList, BulletList, CodeBlock, Heading} = require("../schema-basic")
-const {Plugin} = require("../edit")
-const {historyPlugin} = require("../history")
-const {menuBar, tooltipMenu} = require("../menu")
+const {keymap} = require("../keymap")
+const {history} = require("../history")
+const {menuBar} = require("../menu")
+const {editorPrompt} = require("../prompt")
 const {baseKeymap} = require("../commands")
 
 const {className} = require("./style")
@@ -22,7 +23,7 @@ exports.buildKeymap = buildKeymap
 // The `exampleSetup` plugin ties these together into a plugin that
 // will automatically enable this basic functionality in an editor.
 
-// :: Plugin
+// :: () → Object
 // A convenience plugin that bundles together a simple menu with basic
 // key bindings, input rules, and styling for the example schema.
 // Probably only useful for quickly setting up a passable
@@ -34,58 +35,21 @@ exports.buildKeymap = buildKeymap
 //     enables it with the default options, and passing an object will
 //     pass that value on as the options for the menu bar.
 //
-// **`tooltipMenu`**`: union<bool, Object> = false`
-//   : Enable or configure the tooltip menu. Interpreted the same way
-//     as `menuBar`.
-//
 // **`mapKeys`**: ?Object = null`
 //   : Can be used to [adjust](#buildKeymap) the key bindings created.
-exports.exampleSetup = new Plugin(class {
-  constructor(pm, options) {
-    pm.view.wrapper.classList.add(className)
-    this.keymap = buildKeymap(pm.schema, options.mapKeys)
-    pm.addKeymap(baseKeymap, -100)
-    pm.addKeymap(this.keymap)
-    this.inputRules = allInputRules.concat(buildInputRules(pm.schema))
-    let rules = inputRules.ensure(pm)
-    this.inputRules.forEach(rule => rules.addRule(rule))
+exports.exampleSetup = function(options) {
+  let hist = history()
 
-    let builtMenu
-    this.barConf = options.menuBar
-    this.tooltipConf = options.tooltipMenu
-
-    if (this.barConf === true) {
-      builtMenu = buildMenuItems(pm.schema)
-      this.barConf = {float: true, content: builtMenu.fullMenu}
-    }
-    if (this.barConf) menuBar.config(this.barConf).attach(pm)
-
-    if (this.tooltipConf === true) {
-      if (!builtMenu) builtMenu = buildMenuItems(pm.schema)
-      this.tooltipConf = {selectedBlockMenu: true,
-                          inlineContent: builtMenu.inlineMenu,
-                          blockContent: builtMenu.blockMenu}
-    }
-    if (this.tooltipConf) tooltipMenu.config(this.tooltipConf).attach(pm)
-
-    if (this.addHistory = !historyPlugin.get(pm))
-      historyPlugin.attach(pm)
-  }
-  detach(pm) {
-    pm.view.wrapper.classList.remove(className)
-    pm.removeKeymap(baseKeymap)
-    pm.removeKeymap(this.keymap)
-    let rules = inputRules.ensure(pm)
-    this.inputRules.forEach(rule => rules.removeRule(rule))
-    if (this.barConf) menuBar.detach(pm)
-    if (this.tooltipConf) tooltipMenu.detach(pm)
-    if (this.addHistory) historyPlugin.detach(pm)
-  }
-}, {
-  menuBar: true,
-  tooltipMenu: false,
-  mapKeys: null
-})
+  return [
+    {className}, // FIXME use
+    editorPrompt(),
+    keymap(buildKeymap(options.schema, options.mapKeys)),
+    keymap(baseKeymap),
+    inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
+    hist
+//    menuBar(options.menuBar || {float: true, content: buildMenuItems(options.schema, hist).fullMenu}),
+  ]
+}
 
 // :: (Schema) → [InputRule]
 // A set of input rules for creating the basic block quotes, lists,
