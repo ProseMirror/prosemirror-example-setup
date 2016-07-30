@@ -46,8 +46,8 @@ exports.exampleSetup = function(options) {
     keymap(buildKeymap(options.schema, options.mapKeys)),
     keymap(baseKeymap),
     inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
-    hist
-//    menuBar(options.menuBar || {float: true, content: buildMenuItems(options.schema, hist).fullMenu}),
+    hist,
+    menuBar(options.menuBar || {float: true, content: buildMenuItems(options.schema, hist).fullMenu})
   ]
 }
 

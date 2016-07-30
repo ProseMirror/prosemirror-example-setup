@@ -27,7 +27,7 @@ function insertImageItem(nodeType) {
     select(state) { return canInsert(state, nodeType) },
     run(state, onAction) {
       let {node, from, to} = state.selection, attrs = nodeType && node && node.type == nodeType && node.attrs
-      openPrompt({
+      onAction(openPrompt({
         title: "Insert image",
         fields: {
           src: new TextField({label: "Location", required: true, value: attrs && attrs.src}),
@@ -35,11 +35,10 @@ function insertImageItem(nodeType) {
           alt: new TextField({label: "Description",
                               value: attrs ? attrs.title : state.doc.textBetween(from, to, " ")})
         },
-        onAction,
         onSubmit(attrs, state, onAction) {
           onAction(state.tr.replaceSelection(nodeType.createAndFill(attrs)).action())
         }
-      })
+      }))
     }
   })
 }
@@ -52,17 +51,16 @@ function insertTableItem(tableType) {
   return new MenuItem({
     title: "Insert a table",
     run(_, onAction) {
-      openPrompt({
+      onAction(openPrompt({
         title: "Insert table",
         fields: {
           rows: new TextField({label: "Rows", validate: positiveInteger}),
           cols: new TextField({label: "Columns", validate: positiveInteger})
         },
-        onAction,
         onSubmit({rows, cols}, state, onAction) {
           onAction(state.tr.replaceSelection(createTable(tableType, +rows, +cols)).scrollAction())
         }
-      })
+      }))
     },
     select(state) {
       let $from = state.selection.$from
@@ -101,7 +99,7 @@ function linkItem(markType) {
     title: "Add or remove link",
     icon: icons.link,
     run(_, onAction) {
-      openPrompt({
+      onAction(openPrompt({
         title: "Create a link",
         fields: {
           href: new TextField({
@@ -115,11 +113,10 @@ function linkItem(markType) {
           }),
           title: new TextField({label: "Title"})
         },
-        onAction,
         onSubmit(attrs, state, onAction) {
           toggleMark(markType, attrs)(state, onAction)
         }
-      })
+      }))
     }
   })
 }
