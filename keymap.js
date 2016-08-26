@@ -29,7 +29,7 @@ const {wrapInList, splitListItem, liftListItem, sinkListItem} = require("../comm
 // You can suppress or map these bindings by passing a `mapKeys`
 // argument, which maps key names (say `"Mod-B"` to either `false`, to
 // remove the binding, or a new key name string.
-function buildKeymap(schema, mapKeys) {
+function buildKeymap(schema, mapKeys, history) {
   let keys = {}
   function bind(key, cmd) {
     if (mapKeys) {
@@ -39,6 +39,9 @@ function buildKeymap(schema, mapKeys) {
     }
     keys[key] = cmd
   }
+
+  bind("Mod-Z", history.undo)
+  bind("Mod-Y", history.redo)
 
   for (let name in schema.marks) {
     let mark = schema.marks[name]

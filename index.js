@@ -37,7 +37,7 @@ exports.exampleSetup = function(options) {
     {className, // FIXME use
      menuContent: buildMenuItems(options.schema, hist).fullMenu,
      floatingMenu: true},
-    keymap(buildKeymap(options.schema, options.mapKeys)),
+    keymap(buildKeymap(options.schema, options.mapKeys, hist)),
     keymap(baseKeymap),
     inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
     hist
