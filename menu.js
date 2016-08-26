@@ -25,9 +25,9 @@ function insertImageItem(nodeType) {
     title: "Insert image",
     label: "Image",
     select(state) { return canInsert(state, nodeType) },
-    run(state, onAction) {
+    run(state, _, view) {
       let {node, from, to} = state.selection, attrs = nodeType && node && node.type == nodeType && node.attrs
-      onAction(openPrompt({
+      openPrompt({
         title: "Insert image",
         fields: {
           src: new TextField({label: "Location", required: true, value: attrs && attrs.src}),
@@ -35,10 +35,13 @@ function insertImageItem(nodeType) {
           alt: new TextField({label: "Description",
                               value: attrs ? attrs.title : state.doc.textBetween(from, to, " ")})
         },
-        onSubmit(attrs, state, onAction) {
-          onAction(state.tr.replaceSelection(nodeType.createAndFill(attrs)).action())
+        // FIXME this (and similar uses) won't have the current state
+        // when it runs, leading to problems in, for example, a
+        // collaborative setup
+        callback(attrs) {
+          view.props.onAction(view.state.tr.replaceSelection(nodeType.createAndFill(attrs)).action())
         }
-      }))
+      })
     }
   })
 }
@@ -50,17 +53,17 @@ function positiveInteger(value) {
 function insertTableItem(tableType) {
   return new MenuItem({
     title: "Insert a table",
-    run(_, onAction) {
-      onAction(openPrompt({
+    run(_, _a, view) {
+      openPrompt({
         title: "Insert table",
         fields: {
           rows: new TextField({label: "Rows", validate: positiveInteger}),
           cols: new TextField({label: "Columns", validate: positiveInteger})
         },
-        onSubmit({rows, cols}, state, onAction) {
-          onAction(state.tr.replaceSelection(createTable(tableType, +rows, +cols)).scrollAction())
+        callback({rows, cols}) {
+          view.props.onAction(view.state.tr.replaceSelection(createTable(tableType, +rows, +cols)).scrollAction())
         }
-      }))
+      })
     },
     select(state) {
       let $from = state.selection.$from
@@ -98,8 +101,8 @@ function linkItem(markType) {
   return markItem(markType, {
     title: "Add or remove link",
     icon: icons.link,
-    run(_, onAction) {
-      onAction(openPrompt({
+    run(_, _a, view) {
+      openPrompt({
         title: "Create a link",
         fields: {
           href: new TextField({
@@ -113,10 +116,10 @@ function linkItem(markType) {
           }),
           title: new TextField({label: "Title"})
         },
-        onSubmit(attrs, state, onAction) {
-          toggleMark(markType, attrs)(state, onAction)
+        callback(attrs) {
+          toggleMark(markType, attrs)(view.state, view.props.onAction)
         }
-      }))
+      })
     }
   })
 }

@@ -3,7 +3,6 @@ const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRu
 const {BlockQuote, OrderedList, BulletList, CodeBlock, Heading} = require("../schema-basic")
 const {keymap} = require("../keymap")
 const {history} = require("../history")
-const {editorPrompt} = require("../prompt")
 const {baseKeymap} = require("../commands")
 
 const {className} = require("./style")
@@ -38,7 +37,6 @@ exports.exampleSetup = function(options) {
     {className, // FIXME use
      menuContent: buildMenuItems(options.schema, hist).fullMenu,
      floatingMenu: true},
-    editorPrompt(),
     keymap(buildKeymap(options.schema, options.mapKeys)),
     keymap(baseKeymap),
     inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
