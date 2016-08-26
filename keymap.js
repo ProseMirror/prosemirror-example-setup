@@ -58,8 +58,10 @@ function buildKeymap(schema, mapKeys) {
     if (node instanceof BlockQuote)
       bind("Shift-Ctrl-Period", wrapIn(node))
     if (node instanceof HardBreak) {
-      let cmd = chainCommands(newlineInCode,
-                              pm => pm.tr.replaceSelection(node.create()).applyAndScroll())
+      let cmd = chainCommands(newlineInCode, (state, onAction) => {
+        onAction(state.tr.replaceSelection(node.create()).scrollAction())
+        return true
+      })
       bind("Mod-Enter", cmd)
       bind("Shift-Enter", cmd)
       if (browser.mac) bind("Ctrl-Enter", cmd)
@@ -76,7 +78,10 @@ function buildKeymap(schema, mapKeys) {
     if (node instanceof Heading) for (let i = 1; i <= 6; i++)
       bind("Shift-Ctrl-Digit" + i, setBlockType(node, {level: i}))
     if (node instanceof HorizontalRule)
-      bind("Mod-Shift-Minus", pm => pm.tr.replaceSelection(node.create()).applyAndScroll())
+      bind("Mod-Shift-Minus", (state, onAction) => {
+        onAction(state.tr.replaceSelection(node.create()).scrollAction())
+        return true
+      })
 
     if (node instanceof TableRow) {
       bind("Tab", selectNextCell)
