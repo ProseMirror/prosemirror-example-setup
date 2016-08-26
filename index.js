@@ -3,7 +3,6 @@ const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRu
 const {BlockQuote, OrderedList, BulletList, CodeBlock, Heading} = require("../schema-basic")
 const {keymap} = require("../keymap")
 const {history} = require("../history")
-const {menuBar} = require("../menu")
 const {editorPrompt} = require("../prompt")
 const {baseKeymap} = require("../commands")
 
@@ -30,24 +29,20 @@ exports.buildKeymap = buildKeymap
 // editor—you'll need more control over your settings in most
 // real-world situations. The following options are recognized:
 //
-// **`menuBar`**`: union<bool, Object> = true`
-//   : Enable or configure the menu bar. `false` turns it off, `true`
-//     enables it with the default options, and passing an object will
-//     pass that value on as the options for the menu bar.
-//
 // **`mapKeys`**: ?Object = null`
 //   : Can be used to [adjust](#buildKeymap) the key bindings created.
 exports.exampleSetup = function(options) {
   let hist = history()
 
   return [
-    {className}, // FIXME use
+    {className, // FIXME use
+     menuContent: buildMenuItems(options.schema, hist).fullMenu,
+     floatingMenu: true},
     editorPrompt(),
     keymap(buildKeymap(options.schema, options.mapKeys)),
     keymap(baseKeymap),
     inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
-    hist,
-    menuBar(options.menuBar || {float: true, content: buildMenuItems(options.schema, hist).fullMenu})
+    hist
   ]
 }
 
