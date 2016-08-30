@@ -2,8 +2,7 @@ const {HardBreak, BulletList, OrderedList, ListItem, BlockQuote, HorizontalRule,
        StrongMark, EmMark, CodeMark} = require("../schema-basic")
 const browser = require("../util/browser")
 const {wrapIn, setBlockType, chainCommands, newlineInCode, toggleMark} = require("../commands")
-const {TableRow} = require("../schema-table")
-const {selectNextCell, selectPreviousCell} = require("../commands-table")
+const {TableRow, selectNextCell, selectPreviousCell} = require("../schema-table")
 const {wrapInList, splitListItem, liftListItem, sinkListItem} = require("../commands-list")
 
 // :: (Schema, ?Object) → Object
