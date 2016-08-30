@@ -7,7 +7,6 @@ const {Table, TableRow, createTable, addColumnBefore, addColumnAfter,
 const {toggleMark} = require("../commands")
 const {wrapInList, BulletList, OrderedList} = require("../schema-list")
 const {TextField, openPrompt} = require("../prompt")
-const {copyObj} = require("../util/obj")
 
 // Helpers to create specific types of items
 
@@ -78,11 +77,13 @@ function insertTableItem(tableType) {
 }
 
 function cmdItem(cmd, options) {
-  return new MenuItem(copyObj(options, {
+  let passedOptions = {
     label: options.title,
     run: cmd,
     select(state) { return cmd(state) }
-  }))
+  }
+  for (let prop in options) passedOptions[prop] = options[prop]
+  return new MenuItem(passedOptions)
 }
 
 function markActive(state, type) {
@@ -92,9 +93,11 @@ function markActive(state, type) {
 }
 
 function markItem(markType, options) {
-  return cmdItem(toggleMark(markType), copyObj(options, {
+  let passedOptions = {
     active(state) { return markActive(state, markType) }
-  }))
+  }
+  for (let prop in options) passedOptions[prop] = options[prop]
+  return cmdItem(toggleMark(markType), passedOptions)
 }
 
 function linkItem(markType) {
