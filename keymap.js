@@ -1,10 +1,11 @@
 const {HardBreak, BlockQuote, HorizontalRule, Paragraph, CodeBlock, Heading,
        StrongMark, EmMark, CodeMark} = require("../schema-basic")
-const browser = require("../util/browser")
 const {wrapIn, setBlockType, chainCommands, newlineInCode, toggleMark} = require("../commands")
 const {TableRow, selectNextCell, selectPreviousCell} = require("../schema-table")
 const {wrapInList, splitListItem, liftListItem, sinkListItem,
        BulletList, OrderedList, ListItem} = require("../schema-list")
+
+const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false
 
 // :: (Schema, ?Object) → Object
 // Inspect the given schema looking for marks and nodes from the
@@ -67,7 +68,7 @@ function buildKeymap(schema, mapKeys, history) {
       })
       bind("Mod-Enter", cmd)
       bind("Shift-Enter", cmd)
-      if (browser.mac) bind("Ctrl-Enter", cmd)
+      if (mac) bind("Ctrl-Enter", cmd)
     }
     if (node instanceof ListItem) {
       bind("Enter", splitListItem(node))
