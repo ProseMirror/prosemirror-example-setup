@@ -6,7 +6,6 @@ const {keymap} = require("../keymap")
 const {history} = require("../history")
 const {baseKeymap} = require("../commands")
 
-const {className} = require("./style")
 const {buildMenuItems} = require("./menu")
 exports.buildMenuItems = buildMenuItems
 const {buildKeymap} = require("./keymap")
@@ -35,7 +34,7 @@ exports.exampleSetup = function(options) {
   let hist = history()
 
   return [
-    {className, // FIXME use
+    {className: "ProseMirror-example-setup-style",
      menuContent: buildMenuItems(options.schema, hist).fullMenu,
      floatingMenu: true},
     keymap(buildKeymap(options.schema, options.mapKeys, hist)),
