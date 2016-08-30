@@ -1,9 +1,10 @@
-const {HardBreak, BulletList, OrderedList, ListItem, BlockQuote, HorizontalRule, Paragraph, CodeBlock, Heading,
+const {HardBreak, BlockQuote, HorizontalRule, Paragraph, CodeBlock, Heading,
        StrongMark, EmMark, CodeMark} = require("../schema-basic")
 const browser = require("../util/browser")
 const {wrapIn, setBlockType, chainCommands, newlineInCode, toggleMark} = require("../commands")
 const {TableRow, selectNextCell, selectPreviousCell} = require("../schema-table")
-const {wrapInList, splitListItem, liftListItem, sinkListItem} = require("../commands-list")
+const {wrapInList, splitListItem, liftListItem, sinkListItem,
+       BulletList, OrderedList, ListItem} = require("../schema-list")
 
 // :: (Schema, ?Object) → Object
 // Inspect the given schema looking for marks and nodes from the

@@ -1,6 +1,7 @@
 const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
        inputRules, allInputRules} = require("../inputrules")
-const {BlockQuote, OrderedList, BulletList, CodeBlock, Heading} = require("../schema-basic")
+const {BlockQuote, CodeBlock, Heading} = require("../schema-basic")
+const {OrderedList, BulletList} = require("../schema-list")
 const {keymap} = require("../keymap")
 const {history} = require("../history")
 const {baseKeymap} = require("../commands")

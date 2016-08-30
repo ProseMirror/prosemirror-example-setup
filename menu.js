@@ -1,11 +1,11 @@
-const {StrongMark, EmMark, CodeMark, LinkMark, Image, BulletList, OrderedList, BlockQuote,
+const {StrongMark, EmMark, CodeMark, LinkMark, Image, BlockQuote,
        Heading, Paragraph, CodeBlock, HorizontalRule} = require("../schema-basic")
 const {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
        selectParentNodeItem, undoItem, redoItem, icons, MenuItem} = require("../menu")
 const {Table, TableRow, createTable, addColumnBefore, addColumnAfter,
        removeColumn, addRowBefore, addRowAfter, removeRow} = require("../schema-table")
 const {toggleMark} = require("../commands")
-const {wrapInList} = require("../commands-list")
+const {wrapInList, BulletList, OrderedList} = require("../schema-list")
 const {TextField, openPrompt} = require("../prompt")
 const {copyObj} = require("../util/obj")
 
