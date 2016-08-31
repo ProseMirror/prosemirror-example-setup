@@ -29,7 +29,7 @@ exports.buildKeymap = buildKeymap
 // real-world situations. The following options are recognized:
 //
 // **`mapKeys`**: ?Object = null`
-//   : Can be used to [adjust](#buildKeymap) the key bindings created.
+//   : Can be used to [adjust](#example-setup.buildKeymap) the key bindings created.
 exports.exampleSetup = function(options) {
   let hist = history()
 

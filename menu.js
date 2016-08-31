@@ -136,36 +136,36 @@ function wrapListItem(nodeType, options) {
 // return an object with relevant menu items relating to those marks:
 //
 // **`toggleStrong`**`: MenuItem`
-//   : A menu item to toggle the [strong mark](#StrongMark).
+//   : A menu item to toggle the [strong mark](#schema-basic.StrongMark).
 //
 // **`toggleEm`**`: MenuItem`
-//   : A menu item to toggle the [emphasis mark](#EmMark).
+//   : A menu item to toggle the [emphasis mark](#schema-basic.EmMark).
 //
 // **`toggleCode`**`: MenuItem`
-//   : A menu item to toggle the [code font mark](#CodeMark).
+//   : A menu item to toggle the [code font mark](#schema-basic.CodeMark).
 //
 // **`toggleLink`**`: MenuItem`
-//   : A menu item to toggle the [link mark](#LinkMark).
+//   : A menu item to toggle the [link mark](#schema-basic.LinkMark).
 //
 // **`insertImage`**`: MenuItem`
-//   : A menu item to insert an [image](#Image).
+//   : A menu item to insert an [image](#schema-basic.Image).
 //
 // **`wrapBulletList`**`: MenuItem`
-//   : A menu item to wrap the selection in a [bullet list](#BulletList).
+//   : A menu item to wrap the selection in a [bullet list](#schema-list.BulletList).
 //
 // **`wrapOrderedList`**`: MenuItem`
-//   : A menu item to wrap the selection in an [ordered list](#OrderedList).
+//   : A menu item to wrap the selection in an [ordered list](#schema-list.OrderedList).
 //
 // **`wrapBlockQuote`**`: MenuItem`
-//   : A menu item to wrap the selection in a [block quote](#BlockQuote).
+//   : A menu item to wrap the selection in a [block quote](#schema-basic.BlockQuote).
 //
 // **`makeParagraph`**`: MenuItem`
 //   : A menu item to set the current textblock to be a normal
-//     [paragraph](#Paragraph).
+//     [paragraph](#schema-basic.Paragraph).
 //
 // **`makeCodeBlock`**`: MenuItem`
 //   : A menu item to set the current textblock to be a
-//     [code block](#CodeBlock).
+//     [code block](#schema-basic.CodeBlock).
 //
 // **`insertTable`**`: MenuItem`
 //   : An item to insert a [table](#schema-table).
@@ -175,7 +175,7 @@ function wrapListItem(nodeType, options) {
 //
 // **`makeHead[N]`**`: MenuItem`
 //   : Where _N_ is 1 to 6. Menu items to set the current textblock to
-//     be a [heading](#Heading) of level _N_.
+//     be a [heading](#schema-basic.Heading) of level _N_.
 //
 // **`insertHorizontalRule`**`: MenuItem`
 //   : A menu item to insert a horizontal rule.
@@ -192,17 +192,9 @@ function wrapListItem(nodeType, options) {
 //   : A dropdown containing the items for making the current
 //     textblock a paragraph, code block, or heading.
 //
-// **`inlineMenu`**`: [[MenuElement]]`
-//   : An array of arrays of menu elements for use as the inline menu
-//     to, for example, a [tooltip menu](#menu/tooltipmenu).
-//
-// **`blockMenu`**`: [[MenuElement]]`
-//   : An array of arrays of menu elements for use as the block menu
-//     to, for example, a [tooltip menu](#menu/tooltipmenu).
-//
 // **`fullMenu`**`: [[MenuElement]]`
 //   : An array of arrays of menu elements for use as the full menu
-//     for, for example the [menu bar](#menuBar).
+//     for, for example the [menu bar](#menu.MenuBarEditorView).
 function buildMenuItems(schema, history) {
   let r = {}
   for (let name in schema.marks) {

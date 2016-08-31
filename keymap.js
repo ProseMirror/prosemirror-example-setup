@@ -12,9 +12,9 @@ const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : f
 // basic schema, and if found, add key bindings related to them.
 // This will add:
 //
-// * **Mod-KeyB** for toggling [strong](#StrongMark)
-// * **Mod-KeyI** for toggling [emphasis](#EmMark)
-// * **Mod-Backquote** for toggling [code font](#CodeMark)
+// * **Mod-KeyB** for toggling [strong](#schema-basic.StrongMark)
+// * **Mod-KeyI** for toggling [emphasis](#schema-basic.EmMark)
+// * **Mod-Backquote** for toggling [code font](#schema-basic.CodeMark)
 // * **Ctrl-Shift-Digit0** for making the current textblock a paragraph
 // * **Ctrl-Shift-Digit1** to **Ctrl-Shift-Digit6** for making the current
 //   textblock a heading of the corresponding level
