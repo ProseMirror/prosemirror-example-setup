@@ -34,7 +34,7 @@ exports.exampleSetup = function(options) {
   let hist = history()
 
   return [
-    {className: "ProseMirror-example-setup-style",
+    {class: () => "ProseMirror-example-setup-style",
      menuContent: buildMenuItems(options.schema, hist).fullMenu,
      floatingMenu: true},
     keymap(buildKeymap(options.schema, options.mapKeys, hist)),
