@@ -5,6 +5,7 @@ const {OrderedList, BulletList} = require("../schema-list")
 const {keymap} = require("../keymap")
 const {history} = require("../history")
 const {baseKeymap} = require("../commands")
+const {Plugin} = require("../state")
 
 const {buildMenuItems} = require("./menu")
 exports.buildMenuItems = buildMenuItems
@@ -21,28 +22,37 @@ exports.buildKeymap = buildKeymap
 // The `exampleSetup` plugin ties these together into a plugin that
 // will automatically enable this basic functionality in an editor.
 
-// :: () → Object
+// :: (Object) → Plugin
 // A convenience plugin that bundles together a simple menu with basic
 // key bindings, input rules, and styling for the example schema.
 // Probably only useful for quickly setting up a passable
 // editor—you'll need more control over your settings in most
-// real-world situations. The following options are recognized:
+// real-world situations.
 //
-// **`mapKeys`**: ?Object = null`
-//   : Can be used to [adjust](#example-setup.buildKeymap) the key bindings created.
-exports.exampleSetup = function(options) {
-  let hist = history()
+//   options::- The following options are recognized:
+//
+//     schema:: Schema
+//     The schema to generate key bindings and menu items for.
+//
+//     mapKeys:: ?Object
+//     Can be used to [adjust](#example-setup.buildKeymap) the key bindings created.
+function exampleSetup(options) {
+  return new Plugin({
+    props: {
+      class: () => "ProseMirror-example-setup-style",
+      menuContent: buildMenuItems(options.schema).fullMenu,
+      floatingMenu: true
+    },
 
-  return [
-    {class: () => "ProseMirror-example-setup-style",
-     menuContent: buildMenuItems(options.schema, hist).fullMenu,
-     floatingMenu: true},
-    keymap(buildKeymap(options.schema, options.mapKeys, hist)),
-    keymap(baseKeymap),
-    inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
-    hist
-  ]
+    dependencies: [
+      inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
+      keymap(buildKeymap(options.schema, options.mapKeys)),
+      keymap(baseKeymap),
+      history
+    ]
+  })
 }
+exports.exampleSetup = exampleSetup
 
 // :: (Schema) → [InputRule]
 // A set of input rules for creating the basic block quotes, lists,

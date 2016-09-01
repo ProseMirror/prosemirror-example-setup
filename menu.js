@@ -195,7 +195,7 @@ function wrapListItem(nodeType, options) {
 // **`fullMenu`**`: [[MenuElement]]`
 //   : An array of arrays of menu elements for use as the full menu
 //     for, for example the [menu bar](#menu.MenuBarEditorView).
-function buildMenuItems(schema, history) {
+function buildMenuItems(schema) {
   let r = {}
   for (let name in schema.marks) {
     let mark = schema.marks[name]
@@ -275,7 +275,7 @@ function buildMenuItems(schema, history) {
   r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink]), [r.insertMenu]]
   r.blockMenu = [cut([r.typeMenu, r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
                       liftItem, selectParentNodeItem])]
-  r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem(history), redoItem(history)]])
+  r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem, redoItem]])
 
   return r
 }

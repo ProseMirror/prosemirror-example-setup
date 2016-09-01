@@ -4,6 +4,7 @@ const {wrapIn, setBlockType, chainCommands, newlineInCode, toggleMark} = require
 const {TableRow, selectNextCell, selectPreviousCell} = require("../schema-table")
 const {wrapInList, splitListItem, liftListItem, sinkListItem,
        BulletList, OrderedList, ListItem} = require("../schema-list")
+const {undo, redo} = require("../history")
 
 const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false
 
@@ -30,7 +31,7 @@ const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : f
 // You can suppress or map these bindings by passing a `mapKeys`
 // argument, which maps key names (say `"Mod-B"` to either `false`, to
 // remove the binding, or a new key name string.
-function buildKeymap(schema, mapKeys, history) {
+function buildKeymap(schema, mapKeys) {
   let keys = {}
   function bind(key, cmd) {
     if (mapKeys) {
@@ -41,8 +42,8 @@ function buildKeymap(schema, mapKeys, history) {
     keys[key] = cmd
   }
 
-  bind("Mod-Z", history.undo)
-  bind("Mod-Y", history.redo)
+  bind("Mod-Z", undo)
+  bind("Mod-Y", redo)
 
   for (let name in schema.marks) {
     let mark = schema.marks[name]
