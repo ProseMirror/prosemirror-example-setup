@@ -1,12 +1,12 @@
 const {StrongMark, EmMark, CodeMark, LinkMark, Image, BlockQuote,
-       Heading, Paragraph, CodeBlock, HorizontalRule} = require("../schema-basic")
+       Heading, Paragraph, CodeBlock, HorizontalRule} = require("prosemirror-schema-basic")
 const {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
-       selectParentNodeItem, undoItem, redoItem, icons, MenuItem} = require("../menu")
+       selectParentNodeItem, undoItem, redoItem, icons, MenuItem} = require("prosemirror-menu")
 const {Table, TableRow, createTable, addColumnBefore, addColumnAfter,
-       removeColumn, addRowBefore, addRowAfter, removeRow} = require("../schema-table")
-const {toggleMark} = require("../commands")
-const {wrapInList, BulletList, OrderedList} = require("../schema-list")
-const {TextField, openPrompt} = require("../prompt")
+       removeColumn, addRowBefore, addRowAfter, removeRow} = require("prosemirror-schema-table")
+const {toggleMark} = require("prosemirror-commands")
+const {wrapInList, BulletList, OrderedList} = require("prosemirror-schema-list")
+const {TextField, openPrompt} = require("./prompt")
 
 // Helpers to create specific types of items
 

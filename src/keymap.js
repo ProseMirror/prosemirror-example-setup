@@ -1,10 +1,10 @@
 const {HardBreak, BlockQuote, HorizontalRule, Paragraph, CodeBlock, Heading,
-       StrongMark, EmMark, CodeMark} = require("../schema-basic")
-const {wrapIn, setBlockType, chainCommands, newlineInCode, toggleMark} = require("../commands")
-const {TableRow, selectNextCell, selectPreviousCell} = require("../schema-table")
+       StrongMark, EmMark, CodeMark} = require("prosemirror-schema-basic")
+const {wrapIn, setBlockType, chainCommands, newlineInCode, toggleMark} = require("prosemirror-commands")
+const {TableRow, selectNextCell, selectPreviousCell} = require("prosemirror-schema-table")
 const {wrapInList, splitListItem, liftListItem, sinkListItem,
-       BulletList, OrderedList, ListItem} = require("../schema-list")
-const {undo, redo} = require("../history")
+       BulletList, OrderedList, ListItem} = require("prosemirror-schema-list")
+const {undo, redo} = require("prosemirror-history")
 
 const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false
 

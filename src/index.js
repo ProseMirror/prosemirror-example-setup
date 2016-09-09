@@ -1,11 +1,11 @@
 const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
-       inputRules, allInputRules} = require("../inputrules")
-const {BlockQuote, CodeBlock, Heading} = require("../schema-basic")
-const {OrderedList, BulletList} = require("../schema-list")
-const {keymap} = require("../keymap")
-const {history} = require("../history")
-const {baseKeymap} = require("../commands")
-const {Plugin} = require("../state")
+       inputRules, allInputRules} = require("prosemirror-inputrules")
+const {BlockQuote, CodeBlock, Heading} = require("prosemirror-schema-basic")
+const {OrderedList, BulletList} = require("prosemirror-schema-list")
+const {keymap} = require("prosemirror-keymap")
+const {history} = require("prosemirror-history")
+const {baseKeymap} = require("prosemirror-commands")
+const {Plugin} = require("prosemirror-state")
 
 const {buildMenuItems} = require("./menu")
 exports.buildMenuItems = buildMenuItems
