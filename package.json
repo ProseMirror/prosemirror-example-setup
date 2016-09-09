@@ -1,7 +1,7 @@
 {
-  "name": "prosemirror-state",
+  "name": "prosemirror-example-setup",
   "version": "0.11.0",
-  "description": "ProseMirror editor state",
+  "description": "An example for how to set up a ProseMirror editor",
   "main": "src/index.js",
   "license": "MIT",
   "maintainers": [
