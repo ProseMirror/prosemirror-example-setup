@@ -1,7 +1,5 @@
 const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
        inputRules, allInputRules} = require("prosemirror-inputrules")
-const {BlockQuote, CodeBlock, Heading} = require("prosemirror-schema-basic")
-const {OrderedList, BulletList} = require("prosemirror-schema-list")
 const {keymap} = require("prosemirror-keymap")
 const {history} = require("prosemirror-history")
 const {baseKeymap} = require("prosemirror-commands")
@@ -58,15 +56,12 @@ exports.exampleSetup = exampleSetup
 // A set of input rules for creating the basic block quotes, lists,
 // code blocks, and heading.
 function buildInputRules(schema) {
-  let result = []
-  for (let name in schema.nodes) {
-    let node = schema.nodes[name]
-    if (node instanceof BlockQuote) result.push(blockQuoteRule(node))
-    if (node instanceof OrderedList) result.push(orderedListRule(node))
-    if (node instanceof BulletList) result.push(bulletListRule(node))
-    if (node instanceof CodeBlock) result.push(codeBlockRule(node))
-    if (node instanceof Heading) result.push(headingRule(node, 6))
-  }
+  let result = [], type
+  if (type = schema.nodes.blockquote) result.push(blockQuoteRule(type))
+  if (type = schema.nodes.ordered_list) result.push(orderedListRule(type))
+  if (type = schema.nodes.bullet_list) result.push(bulletListRule(type))
+  if (type = schema.nodes.code_block) result.push(codeBlockRule(type))
+  if (type = schema.nodes.heading) result.push(headingRule(type, 6))
   return result
 }
 exports.buildInputRules = buildInputRules

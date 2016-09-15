@@ -1,11 +1,9 @@
-const {StrongMark, EmMark, CodeMark, LinkMark, Image, BlockQuote,
-       Heading, Paragraph, CodeBlock, HorizontalRule} = require("prosemirror-schema-basic")
 const {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
        selectParentNodeItem, undoItem, redoItem, icons, MenuItem} = require("prosemirror-menu")
-const {Table, TableRow, createTable, addColumnBefore, addColumnAfter,
+const {createTable, addColumnBefore, addColumnAfter,
        removeColumn, addRowBefore, addRowAfter, removeRow} = require("prosemirror-schema-table")
 const {toggleMark} = require("prosemirror-commands")
-const {wrapInList, BulletList, OrderedList} = require("prosemirror-schema-list")
+const {wrapInList} = require("prosemirror-schema-list")
 const {TextField, openPrompt} = require("./prompt")
 
 // Helpers to create specific types of items
@@ -200,71 +198,66 @@ function wrapListItem(nodeType, options) {
 //   : An array of arrays of menu elements for use as the full menu
 //     for, for example the [menu bar](#menu.MenuBarEditorView).
 function buildMenuItems(schema) {
-  let r = {}
-  for (let name in schema.marks) {
-    let mark = schema.marks[name]
-    if (mark instanceof StrongMark)
-      r.toggleStrong = markItem(mark, {title: "Toggle strong style", icon: icons.strong})
-    if (mark instanceof EmMark)
-      r.toggleEm = markItem(mark, {title: "Toggle emphasis", icon: icons.em})
-    if (mark instanceof CodeMark)
-      r.toggleCode = markItem(mark, {title: "Toggle code font", icon: icons.code})
-    if (mark instanceof LinkMark)
-      r.toggleLink = linkItem(mark)
-  }
-  for (let name in schema.nodes) {
-    let node = schema.nodes[name]
-    if (node instanceof Image)
-      r.insertImage = insertImageItem(node)
-    if (node instanceof BulletList)
-      r.wrapBulletList = wrapListItem(node, {
-        title: "Wrap in bullet list",
-        icon: icons.bulletList
+  let r = {}, type
+  if (type = schema.marks.strong)
+    r.toggleStrong = markItem(type, {title: "Toggle strong style", icon: icons.strong})
+  if (type = schema.marks.em)
+    r.toggleEm = markItem(type, {title: "Toggle emphasis", icon: icons.em})
+  if (type = schema.marks.code)
+    r.toggleCode = markItem(type, {title: "Toggle code font", icon: icons.code})
+  if (type = schema.marks.link)
+    r.toggleLink = linkItem(type)
+
+  if (type = schema.nodes.image)
+    r.insertImage = insertImageItem(type)
+  if (type = schema.nodes.bullet_list)
+    r.wrapBulletList = wrapListItem(type, {
+      title: "Wrap in bullet list",
+      icon: icons.bulletList
+    })
+  if (type = schema.nodes.ordered_list)
+    r.wrapOrderedList = wrapListItem(type, {
+      title: "Wrap in ordered list",
+      icon: icons.orderedList
+    })
+  if (type = schema.nodes.blockquote)
+    r.wrapBlockQuote = wrapItem(type, {
+      title: "Wrap in block quote",
+      icon: icons.blockquote
+    })
+  if (type = schema.nodes.paragraph)
+    r.makeParagraph = blockTypeItem(type, {
+      title: "Change to paragraph",
+      label: "Plain"
+    })
+  if (type = schema.nodes.code_block)
+    r.makeCodeBlock = blockTypeItem(type, {
+      title: "Change to code block",
+      label: "Code"
+    })
+  if (type = schema.nodes.heading)
+    for (let i = 1; i <= 10; i++)
+      r["makeHead" + i] = blockTypeItem(type, {
+        title: "Change to heading " + i,
+        label: "Level " + i,
+        attrs: {level: i}
       })
-    if (node instanceof OrderedList)
-      r.wrapOrderedList = wrapListItem(node, {
-        title: "Wrap in ordered list",
-        icon: icons.orderedList
-      })
-    if (node instanceof BlockQuote)
-      r.wrapBlockQuote = wrapItem(node, {
-        title: "Wrap in block quote",
-        icon: icons.blockquote
-      })
-    if (node instanceof Paragraph)
-      r.makeParagraph = blockTypeItem(node, {
-        title: "Change to paragraph",
-        label: "Plain"
-      })
-    if (node instanceof CodeBlock)
-      r.makeCodeBlock = blockTypeItem(node, {
-        title: "Change to code block",
-        label: "Code"
-      })
-    if (node instanceof Heading)
-      for (let i = 1; i <= 10; i++)
-        r["makeHead" + i] = blockTypeItem(node, {
-          title: "Change to heading " + i,
-          label: "Level " + i,
-          attrs: {level: i}
-        })
-    if (node instanceof HorizontalRule)
-      r.insertHorizontalRule = new MenuItem({
-        title: "Insert horizontal rule",
-        label: "Horizontal rule",
-        select(state) { return canInsert(state, node) },
-        run(state, onAction) { onAction(state.tr.replaceSelection(node.create()).action()) }
-      })
-    if (node instanceof Table)
-      r.insertTable = insertTableItem(node)
-    if (node instanceof TableRow) {
-      r.addRowBefore = cmdItem(addRowBefore, {title: "Add row before"})
-      r.addRowAfter = cmdItem(addRowAfter, {title: "Add row after"})
-      r.removeRow = cmdItem(removeRow, {title: "Remove row"})
-      r.addColumnBefore = cmdItem(addColumnBefore, {title: "Add column before"})
-      r.addColumnAfter = cmdItem(addColumnAfter, {title: "Add column after"})
-      r.removeColumn = cmdItem(removeColumn, {title: "Remove column"})
-    }
+  if (type = schema.nodes.horizontal_rule)
+    r.insertHorizontalRule = new MenuItem({
+      title: "Insert horizontal rule",
+      label: "Horizontal rule",
+      select(state) { return canInsert(state, type) },
+      run(state, onAction) { onAction(state.tr.replaceSelection(type.create()).action()) }
+    })
+  if (type = schema.nodes.table)
+    r.insertTable = insertTableItem(type)
+  if (type = schema.nodes.table_row) {
+    r.addRowBefore = cmdItem(addRowBefore, {title: "Add row before"})
+    r.addRowAfter = cmdItem(addRowAfter, {title: "Add row after"})
+    r.removeRow = cmdItem(removeRow, {title: "Remove row"})
+    r.addColumnBefore = cmdItem(addColumnBefore, {title: "Add column before"})
+    r.addColumnAfter = cmdItem(addColumnAfter, {title: "Add column after"})
+    r.removeColumn = cmdItem(removeColumn, {title: "Remove column"})
   }
 
   let cut = arr => arr.filter(x => x)

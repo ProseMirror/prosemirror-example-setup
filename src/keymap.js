@@ -1,9 +1,6 @@
-const {HardBreak, BlockQuote, HorizontalRule, Paragraph, CodeBlock, Heading,
-       StrongMark, EmMark, CodeMark} = require("prosemirror-schema-basic")
 const {wrapIn, setBlockType, chainCommands, newlineInCode, toggleMark} = require("prosemirror-commands")
-const {TableRow, selectNextCell, selectPreviousCell} = require("prosemirror-schema-table")
-const {wrapInList, splitListItem, liftListItem, sinkListItem,
-       BulletList, OrderedList, ListItem} = require("prosemirror-schema-list")
+const {selectNextCell, selectPreviousCell} = require("prosemirror-schema-table")
+const {wrapInList, splitListItem, liftListItem, sinkListItem} = require("prosemirror-schema-list")
 const {undo, redo} = require("prosemirror-history")
 
 const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false
@@ -32,7 +29,7 @@ const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : f
 // argument, which maps key names (say `"Mod-B"` to either `false`, to
 // remove the binding, or a new key name string.
 function buildKeymap(schema, mapKeys) {
-  let keys = {}
+  let keys = {}, type
   function bind(key, cmd) {
     if (mapKeys) {
       let mapped = mapKeys[key]
@@ -45,53 +42,48 @@ function buildKeymap(schema, mapKeys) {
   bind("Mod-Z", undo)
   bind("Mod-Y", redo)
 
-  for (let name in schema.marks) {
-    let mark = schema.marks[name]
-    if (mark instanceof StrongMark)
-      bind("Mod-KeyB", toggleMark(mark))
-    if (mark instanceof EmMark)
-      bind("Mod-KeyI", toggleMark(mark))
-    if (mark instanceof CodeMark)
-      bind("Mod-Backquote", toggleMark(mark))
-  }
-  for (let name in schema.nodes) {
-    let node = schema.nodes[name]
-    if (node instanceof BulletList)
-      bind("Shift-Ctrl-Digit8", wrapInList(node))
-    if (node instanceof OrderedList)
-      bind("Shift-Ctrl-Digit9", wrapInList(node))
-    if (node instanceof BlockQuote)
-      bind("Shift-Ctrl-Period", wrapIn(node))
-    if (node instanceof HardBreak) {
-      let cmd = chainCommands(newlineInCode, (state, onAction) => {
-        onAction(state.tr.replaceSelection(node.create()).scrollAction())
-        return true
-      })
-      bind("Mod-Enter", cmd)
-      bind("Shift-Enter", cmd)
-      if (mac) bind("Ctrl-Enter", cmd)
-    }
-    if (node instanceof ListItem) {
-      bind("Enter", splitListItem(node))
-      bind("Mod-BracketLeft", liftListItem(node))
-      bind("Mod-BracketRight", sinkListItem(node))
-    }
-    if (node instanceof Paragraph)
-      bind("Shift-Ctrl-Digit0", setBlockType(node))
-    if (node instanceof CodeBlock)
-      bind("Shift-Ctrl-Backslash", setBlockType(node))
-    if (node instanceof Heading) for (let i = 1; i <= 6; i++)
-      bind("Shift-Ctrl-Digit" + i, setBlockType(node, {level: i}))
-    if (node instanceof HorizontalRule)
-      bind("Mod-Shift-Minus", (state, onAction) => {
-        onAction(state.tr.replaceSelection(node.create()).scrollAction())
-        return true
-      })
+  if (type = schema.marks.strong)
+    bind("Mod-KeyB", toggleMark(type))
+  if (type = schema.marks.em)
+    bind("Mod-KeyI", toggleMark(type))
+  if (type = schema.marks.code)
+    bind("Mod-Backquote", toggleMark(type))
 
-    if (node instanceof TableRow) {
-      bind("Tab", selectNextCell)
-      bind("Shift-Tab", selectPreviousCell)
-    }
+  if (type = schema.nodes.bullet_list)
+    bind("Shift-Ctrl-Digit8", wrapInList(type))
+  if (type = schema.nodes.ordered_list)
+    bind("Shift-Ctrl-Digit9", wrapInList(type))
+  if (type = schema.nodes.blockquote)
+    bind("Shift-Ctrl-Period", wrapIn(type))
+  if (type = schema.nodes.hard_break) {
+    let cmd = chainCommands(newlineInCode, (state, onAction) => {
+      onAction(state.tr.replaceSelection(type.create()).scrollAction())
+      return true
+    })
+    bind("Mod-Enter", cmd)
+    bind("Shift-Enter", cmd)
+    if (mac) bind("Ctrl-Enter", cmd)
+  }
+  if (type = schema.nodes.list_item) {
+    bind("Enter", splitListItem(type))
+    bind("Mod-BracketLeft", liftListItem(type))
+    bind("Mod-BracketRight", sinkListItem(type))
+  }
+  if (type = schema.nodes.paragraph)
+    bind("Shift-Ctrl-Digit0", setBlockType(type))
+  if (type = schema.nodes.code_block)
+    bind("Shift-Ctrl-Backslash", setBlockType(type))
+  if (type = schema.nodes.heading) for (let i = 1; i <= 6; i++)
+    bind("Shift-Ctrl-Digit" + i, setBlockType(type, {level: i}))
+  if (type = schema.nodes.horizontal_rule)
+    bind("Mod-Shift-Minus", (state, onAction) => {
+      onAction(state.tr.replaceSelection(type.create()).scrollAction())
+      return true
+    })
+
+  if (schema.nodes.table_row) {
+    bind("Tab", selectNextCell)
+    bind("Shift-Tab", selectPreviousCell)
   }
   return keys
 }
