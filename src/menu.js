@@ -242,13 +242,15 @@ function buildMenuItems(schema) {
         label: "Level " + i,
         attrs: {level: i}
       })
-  if (type = schema.nodes.horizontal_rule)
+  if (type = schema.nodes.horizontal_rule) {
+    let hr = type
     r.insertHorizontalRule = new MenuItem({
       title: "Insert horizontal rule",
       label: "Horizontal rule",
-      select(state) { return canInsert(state, type) },
-      run(state, onAction) { onAction(state.tr.replaceSelection(type.create()).action()) }
+      select(state) { return canInsert(state, hr) },
+      run(state, onAction) { onAction(state.tr.replaceSelection(hr.create()).action()) }
     })
+  }
   if (type = schema.nodes.table)
     r.insertTable = insertTableItem(type)
   if (type = schema.nodes.table_row) {

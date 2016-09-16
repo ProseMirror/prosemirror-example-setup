@@ -56,8 +56,8 @@ function buildKeymap(schema, mapKeys) {
   if (type = schema.nodes.blockquote)
     bind("Shift-Ctrl-Period", wrapIn(type))
   if (type = schema.nodes.hard_break) {
-    let cmd = chainCommands(newlineInCode, (state, onAction) => {
-      onAction(state.tr.replaceSelection(type.create()).scrollAction())
+    let br = type, cmd = chainCommands(newlineInCode, (state, onAction) => {
+      onAction(state.tr.replaceSelection(br.create()).scrollAction())
       return true
     })
     bind("Mod-Enter", cmd)
@@ -75,11 +75,13 @@ function buildKeymap(schema, mapKeys) {
     bind("Shift-Ctrl-Backslash", setBlockType(type))
   if (type = schema.nodes.heading) for (let i = 1; i <= 6; i++)
     bind("Shift-Ctrl-Digit" + i, setBlockType(type, {level: i}))
-  if (type = schema.nodes.horizontal_rule)
+  if (type = schema.nodes.horizontal_rule) {
+    let hr = type
     bind("Mod-Shift-Minus", (state, onAction) => {
-      onAction(state.tr.replaceSelection(type.create()).scrollAction())
+      onAction(state.tr.replaceSelection(hr.create()).scrollAction())
       return true
     })
+  }
 
   if (schema.nodes.table_row) {
     bind("Tab", selectNextCell)
