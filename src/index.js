@@ -35,6 +35,13 @@ exports.buildKeymap = buildKeymap
 //     mapKeys:: ?Object
 //     Can be used to [adjust](#example-setup.buildKeymap) the key bindings created.
 function exampleSetup(options) {
+  let deps = [
+    inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
+    keymap(buildKeymap(options.schema, options.mapKeys)),
+    keymap(baseKeymap)
+  ]
+  if (options.history !== false) deps.push(history)
+
   return new Plugin({
     props: {
       class: () => "ProseMirror-example-setup-style",
@@ -42,12 +49,7 @@ function exampleSetup(options) {
       floatingMenu: true
     },
 
-    dependencies: [
-      inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
-      keymap(buildKeymap(options.schema, options.mapKeys)),
-      keymap(baseKeymap),
-      history
-    ]
+    dependencies: deps
   })
 }
 exports.exampleSetup = exampleSetup
