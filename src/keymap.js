@@ -10,20 +10,20 @@ const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : f
 // basic schema, and if found, add key bindings related to them.
 // This will add:
 //
-// * **Mod-KeyB** for toggling [strong](#schema-basic.StrongMark)
-// * **Mod-KeyI** for toggling [emphasis](#schema-basic.EmMark)
-// * **Mod-Backquote** for toggling [code font](#schema-basic.CodeMark)
-// * **Ctrl-Shift-Digit0** for making the current textblock a paragraph
-// * **Ctrl-Shift-Digit1** to **Ctrl-Shift-Digit6** for making the current
+// * **Mod-b** for toggling [strong](#schema-basic.StrongMark)
+// * **Mod-i** for toggling [emphasis](#schema-basic.EmMark)
+// * **Mod-`** for toggling [code font](#schema-basic.CodeMark)
+// * **Ctrl-Shift-0** for making the current textblock a paragraph
+// * **Ctrl-Shift-1** to **Ctrl-Shift-Digit6** for making the current
 //   textblock a heading of the corresponding level
 // * **Ctrl-Shift-Backslash** to make the current textblock a code block
-// * **Ctrl-Shift-Digit8** to wrap the selection in an ordered list
-// * **Ctrl-Shift-Digit9** to wrap the selection in a bullet list
-// * **Ctrl-Shift-Period** to wrap the selection in a block quote
+// * **Ctrl-Shift-8** to wrap the selection in an ordered list
+// * **Ctrl-Shift-9** to wrap the selection in a bullet list
+// * **Ctrl->** to wrap the selection in a block quote
 // * **Enter** to split a non-empty textblock in a list item while at
 //   the same time splitting the list item
 // * **Mod-Enter** to insert a hard break
-// * **Mod-Shift-Minus** to insert a horizontal rule
+// * **Mod-_** to insert a horizontal rule
 //
 // You can suppress or map these bindings by passing a `mapKeys`
 // argument, which maps key names (say `"Mod-B"` to either `false`, to
@@ -39,22 +39,22 @@ function buildKeymap(schema, mapKeys) {
     keys[key] = cmd
   }
 
-  bind("Mod-Z", undo)
-  bind("Mod-Y", redo)
+  bind("Mod-z", undo)
+  bind("Mod-y", redo)
 
   if (type = schema.marks.strong)
-    bind("Mod-KeyB", toggleMark(type))
+    bind("Mod-b", toggleMark(type))
   if (type = schema.marks.em)
-    bind("Mod-KeyI", toggleMark(type))
+    bind("Mod-i", toggleMark(type))
   if (type = schema.marks.code)
-    bind("Mod-Backquote", toggleMark(type))
+    bind("Mod-`", toggleMark(type))
 
   if (type = schema.nodes.bullet_list)
-    bind("Shift-Ctrl-Digit8", wrapInList(type))
+    bind("Ctrl-*", wrapInList(type))
   if (type = schema.nodes.ordered_list)
-    bind("Shift-Ctrl-Digit9", wrapInList(type))
+    bind("Ctrl-(", wrapInList(type))
   if (type = schema.nodes.blockquote)
-    bind("Shift-Ctrl-Period", wrapIn(type))
+    bind("Ctrl->", wrapIn(type))
   if (type = schema.nodes.hard_break) {
     let br = type, cmd = chainCommands(newlineInCode, (state, onAction) => {
       onAction(state.tr.replaceSelection(br.create()).scrollAction())
@@ -66,18 +66,24 @@ function buildKeymap(schema, mapKeys) {
   }
   if (type = schema.nodes.list_item) {
     bind("Enter", splitListItem(type))
-    bind("Mod-BracketLeft", liftListItem(type))
-    bind("Mod-BracketRight", sinkListItem(type))
+    bind("Mod-[", liftListItem(type))
+    bind("Mod-]", sinkListItem(type))
   }
   if (type = schema.nodes.paragraph)
-    bind("Shift-Ctrl-Digit0", setBlockType(type))
+    bind("Ctrl-)", setBlockType(type))
   if (type = schema.nodes.code_block)
-    bind("Shift-Ctrl-Backslash", setBlockType(type))
-  if (type = schema.nodes.heading) for (let i = 1; i <= 6; i++)
-    bind("Shift-Ctrl-Digit" + i, setBlockType(type, {level: i}))
+    bind("Ctrl-|", setBlockType(type))
+  if (type = schema.nodes.heading) {
+    bind("Ctrl-!", setBlockType(type, {level: 1}))
+    bind("Ctrl-@", setBlockType(type, {level: 2}))
+    bind("Ctrl-#", setBlockType(type, {level: 3}))
+    bind("Ctrl-$", setBlockType(type, {level: 4}))
+    bind("Ctrl-%", setBlockType(type, {level: 5}))
+    bind("Ctrl-^", setBlockType(type, {level: 6}))
+  }
   if (type = schema.nodes.horizontal_rule) {
     let hr = type
-    bind("Mod-Shift-Minus", (state, onAction) => {
+    bind("Mod-_", (state, onAction) => {
       onAction(state.tr.replaceSelection(hr.create()).scrollAction())
       return true
     })
