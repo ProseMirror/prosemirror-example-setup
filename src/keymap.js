@@ -50,9 +50,9 @@ function buildKeymap(schema, mapKeys) {
     bind("Mod-`", toggleMark(type))
 
   if (type = schema.nodes.bullet_list)
-    bind("Ctrl-*", wrapInList(type))
+    bind("Shift-Ctrl-8", wrapInList(type))
   if (type = schema.nodes.ordered_list)
-    bind("Ctrl-(", wrapInList(type))
+    bind("Shift-Ctrl-9", wrapInList(type))
   if (type = schema.nodes.blockquote)
     bind("Ctrl->", wrapIn(type))
   if (type = schema.nodes.hard_break) {
@@ -70,17 +70,11 @@ function buildKeymap(schema, mapKeys) {
     bind("Mod-]", sinkListItem(type))
   }
   if (type = schema.nodes.paragraph)
-    bind("Ctrl-)", setBlockType(type))
+    bind("Shift-Ctrl-0", setBlockType(type))
   if (type = schema.nodes.code_block)
-    bind("Ctrl-|", setBlockType(type))
-  if (type = schema.nodes.heading) {
-    bind("Ctrl-!", setBlockType(type, {level: 1}))
-    bind("Ctrl-@", setBlockType(type, {level: 2}))
-    bind("Ctrl-#", setBlockType(type, {level: 3}))
-    bind("Ctrl-$", setBlockType(type, {level: 4}))
-    bind("Ctrl-%", setBlockType(type, {level: 5}))
-    bind("Ctrl-^", setBlockType(type, {level: 6}))
-  }
+    bind("Shift-Ctrl-\\", setBlockType(type))
+  if (type = schema.nodes.heading)
+    for (let i = 1; i <= 6; i++) bind("Shift-Ctrl-" + i, setBlockType(type, {level: i}))
   if (type = schema.nodes.horizontal_rule) {
     let hr = type
     bind("Mod-_", (state, onAction) => {
