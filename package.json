@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "prosemirror-inputrules": "^0.11.0",
-    "prosemirror-schema-basic": "^0.11.0",
     "prosemirror-schema-list": "^0.11.0",
     "prosemirror-schema-table": "^0.11.0",
     "prosemirror-keymap": "^0.11.0",
