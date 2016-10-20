@@ -20,7 +20,7 @@ exports.buildKeymap = buildKeymap
 // The `exampleSetup` plugin ties these together into a plugin that
 // will automatically enable this basic functionality in an editor.
 
-// :: (Object) → Plugin
+// :: (Object) → [Plugin]
 // A convenience plugin that bundles together a simple menu with basic
 // key bindings, input rules, and styling for the example schema.
 // Probably only useful for quickly setting up a passable
@@ -40,17 +40,15 @@ function exampleSetup(options) {
     keymap(buildKeymap(options.schema, options.mapKeys)),
     keymap(baseKeymap)
   ]
-  if (options.history !== false) deps.push(history)
+  if (options.history !== false) deps.push(history())
 
-  return new Plugin({
+  return deps.concat(new Plugin({
     props: {
       class: () => "ProseMirror-example-setup-style",
       menuContent: buildMenuItems(options.schema).fullMenu,
       floatingMenu: true
-    },
-
-    dependencies: deps
-  })
+    }
+  }))
 }
 exports.exampleSetup = exampleSetup
 
