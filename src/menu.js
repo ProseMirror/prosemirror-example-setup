@@ -36,7 +36,7 @@ function insertImageItem(nodeType) {
         // when it runs, leading to problems in, for example, a
         // collaborative setup
         callback(attrs) {
-          view.props.onAction(view.state.tr.replaceSelection(nodeType.createAndFill(attrs)).action())
+          view.props.onAction(view.state.tr.replaceSelectionWith(nodeType.createAndFill(attrs)).action())
         }
       })
     }
@@ -58,7 +58,7 @@ function insertTableItem(tableType) {
           cols: new TextField({label: "Columns", validate: positiveInteger})
         },
         callback({rows, cols}) {
-          view.props.onAction(view.state.tr.replaceSelection(createTable(tableType, +rows, +cols)).scrollAction())
+          view.props.onAction(view.state.tr.replaceSelectionWith(createTable(tableType, +rows, +cols)).scrollAction())
         }
       })
     },
@@ -248,7 +248,7 @@ function buildMenuItems(schema) {
       title: "Insert horizontal rule",
       label: "Horizontal rule",
       select(state) { return canInsert(state, hr) },
-      run(state, onAction) { onAction(state.tr.replaceSelection(hr.create()).action()) }
+      run(state, onAction) { onAction(state.tr.replaceSelectionWith(hr.create()).action()) }
     })
   }
   if (type = schema.nodes.table)

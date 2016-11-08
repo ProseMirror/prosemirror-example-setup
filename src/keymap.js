@@ -58,7 +58,7 @@ function buildKeymap(schema, mapKeys) {
     bind("Ctrl->", wrapIn(type))
   if (type = schema.nodes.hard_break) {
     let br = type, cmd = chainCommands(newlineInCode, (state, onAction) => {
-      onAction(state.tr.replaceSelection(br.create()).scrollAction())
+      onAction(state.tr.replaceSelectionWith(br.create()).scrollAction())
       return true
     })
     bind("Mod-Enter", cmd)
@@ -79,7 +79,7 @@ function buildKeymap(schema, mapKeys) {
   if (type = schema.nodes.horizontal_rule) {
     let hr = type
     bind("Mod-_", (state, onAction) => {
-      onAction(state.tr.replaceSelection(hr.create()).scrollAction())
+      onAction(state.tr.replaceSelectionWith(hr.create()).scrollAction())
       return true
     })
   }
