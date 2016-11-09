@@ -40,7 +40,8 @@ function buildKeymap(schema, mapKeys) {
   }
 
   bind("Mod-z", undo)
-  bind("Mod-y", redo)
+  bind("Shift-Mod-z", redo)
+  if (!mac) bind("Mod-y", redo)
 
   if (type = schema.marks.strong)
     bind("Mod-b", toggleMark(type))
