@@ -3,6 +3,7 @@
   "version": "0.13.0",
   "description": "An example for how to set up a ProseMirror editor",
   "main": "dist/index.js",
+  "style": "style/style.css",
   "license": "MIT",
   "maintainers": [
     {
