@@ -1,4 +1,4 @@
-const {wrapIn, setBlockType, chainCommands, newlineInCode, toggleMark} = require("prosemirror-commands")
+const {wrapIn, setBlockType, chainCommands, toggleMark, exitCode} = require("prosemirror-commands")
 const {selectNextCell, selectPreviousCell} = require("prosemirror-schema-table")
 const {wrapInList, splitListItem, liftListItem, sinkListItem} = require("prosemirror-schema-list")
 const {undo, redo} = require("prosemirror-history")
@@ -57,7 +57,7 @@ function buildKeymap(schema, mapKeys) {
   if (type = schema.nodes.blockquote)
     bind("Ctrl->", wrapIn(type))
   if (type = schema.nodes.hard_break) {
-    let br = type, cmd = chainCommands(newlineInCode, (state, onAction) => {
+    let br = type, cmd = chainCommands(exitCode, (state, onAction) => {
       onAction(state.tr.replaceSelectionWith(br.create()).scrollAction())
       return true
     })
