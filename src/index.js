@@ -4,6 +4,7 @@ const {keymap} = require("prosemirror-keymap")
 const {history} = require("prosemirror-history")
 const {baseKeymap} = require("prosemirror-commands")
 const {Plugin} = require("prosemirror-state")
+const {dropCursor} = require("prosemirror-dropcursor")
 
 const {buildMenuItems} = require("./menu")
 exports.buildMenuItems = buildMenuItems
@@ -35,14 +36,15 @@ exports.buildKeymap = buildKeymap
 //     mapKeys:: ?Object
 //     Can be used to [adjust](#example-setup.buildKeymap) the key bindings created.
 function exampleSetup(options) {
-  let deps = [
+  let plugins = [
     inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
     keymap(buildKeymap(options.schema, options.mapKeys)),
-    keymap(baseKeymap)
+    keymap(baseKeymap),
+    dropCursor()
   ]
-  if (options.history !== false) deps.push(history())
+  if (options.history !== false) plugins.push(history())
 
-  return deps.concat(new Plugin({
+  return plugins.concat(new Plugin({
     props: {
       class: () => "ProseMirror-example-setup-style",
       menuContent: buildMenuItems(options.schema).fullMenu,
