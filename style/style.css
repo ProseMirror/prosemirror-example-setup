@@ -1,12 +1,12 @@
 /* Add space around the hr to make clicking it easier */
 
-.ProseMirror-example-setup-style .ProseMirror-content hr {
+.ProseMirror-example-setup-style hr {
   position: relative;
   height: 6px;
   border: none;
 }
 
-.ProseMirror-example-setup-style .ProseMirror-content hr:after {
+.ProseMirror-example-setup-style hr:after {
   content: "";
   position: absolute;
   left: 10px;
@@ -15,15 +15,15 @@
   border-top: 2px solid silver;
 }
 
-.ProseMirror-example-setup-style .ProseMirror-content img {
+.ProseMirror-example-setup-style img {
   cursor: default;
 }
 
-.ProseMirror-example-setup-style .ProseMirror-content table {
+.ProseMirror-example-setup-style table {
   border-collapse: collapse;
 }
 
-.ProseMirror-example-setup-style .ProseMirror-content td {
+.ProseMirror-example-setup-style td {
   vertical-align: top;
   border: 1px solid #ddd;
   padding: 3px 5px;
