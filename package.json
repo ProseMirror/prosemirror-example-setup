@@ -24,7 +24,7 @@
     "prosemirror-history": "^0.14.0",
     "prosemirror-commands": "^0.14.0",
     "prosemirror-state": "^0.14.0",
-    "prosemirror-menu": "^0.14.0"
+    "prosemirror-menu": "^0.14.0",
     "prosemirror-dropcursor": "^0.14.0"
   },
   "devDependencies": {
