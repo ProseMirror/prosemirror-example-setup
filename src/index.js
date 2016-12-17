@@ -46,7 +46,7 @@ function exampleSetup(options) {
 
   return plugins.concat(new Plugin({
     props: {
-      class: () => "ProseMirror-example-setup-style",
+      attributes: {class: "ProseMirror-example-setup-style"},
       menuContent: buildMenuItems(options.schema).fullMenu,
       floatingMenu: true
     }
