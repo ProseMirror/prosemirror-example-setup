@@ -2,6 +2,7 @@ const {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
        selectParentNodeItem, undoItem, redoItem, icons, MenuItem} = require("prosemirror-menu")
 const {createTable, addColumnBefore, addColumnAfter,
        removeColumn, addRowBefore, addRowAfter, removeRow} = require("prosemirror-schema-table")
+const {Selection} = require("prosemirror-state")
 const {toggleMark} = require("prosemirror-commands")
 const {wrapInList} = require("prosemirror-schema-list")
 const {TextField, openPrompt} = require("./prompt")
@@ -59,7 +60,9 @@ function insertTableItem(tableType) {
           cols: new TextField({label: "Columns", validate: positiveInteger})
         },
         callback({rows, cols}) {
-          view.dispatch(view.state.tr.replaceSelectionWith(createTable(tableType, +rows, +cols)).scrollIntoView())
+          let tr = view.state.tr.replaceSelectionWith(createTable(tableType, +rows, +cols))
+          tr.setSelection(Selection.near(tr.doc.resolve(view.state.selection.from)))
+          view.dispatch(tr.scrollIntoView())
           view.focus()
         }
       })
