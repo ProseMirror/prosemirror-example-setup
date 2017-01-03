@@ -36,7 +36,7 @@ function insertImageItem(nodeType) {
         // when it runs, leading to problems in, for example, a
         // collaborative setup
         callback(attrs) {
-          view.props.onAction(view.state.tr.replaceSelectionWith(nodeType.createAndFill(attrs)).action())
+          view.dispatch(view.state.tr.replaceSelectionWith(nodeType.createAndFill(attrs)))
         }
       })
     }
@@ -58,7 +58,7 @@ function insertTableItem(tableType) {
           cols: new TextField({label: "Columns", validate: positiveInteger})
         },
         callback({rows, cols}) {
-          view.props.onAction(view.state.tr.replaceSelectionWith(createTable(tableType, +rows, +cols)).scrollAction())
+          view.dispatch(view.state.tr.replaceSelectionWith(createTable(tableType, +rows, +cols)).scrollIntoView())
         }
       })
     },
@@ -102,9 +102,9 @@ function linkItem(markType) {
   return markItem(markType, {
     title: "Add or remove link",
     icon: icons.link,
-    run(state, onAction, view) {
+    run(state, dispatch, view) {
       if (markActive(state, markType)) {
-        toggleMark(markType)(state, onAction)
+        toggleMark(markType)(state, dispatch)
         return true
       }
       openPrompt({
@@ -122,7 +122,7 @@ function linkItem(markType) {
           title: new TextField({label: "Title"})
         },
         callback(attrs) {
-          toggleMark(markType, attrs)(view.state, view.props.onAction)
+          toggleMark(markType, attrs)(view.state, view.dispatch)
         }
       })
     }
@@ -248,7 +248,7 @@ function buildMenuItems(schema) {
       title: "Insert horizontal rule",
       label: "Horizontal rule",
       select(state) { return canInsert(state, hr) },
-      run(state, onAction) { onAction(state.tr.replaceSelectionWith(hr.create()).action()) }
+      run(state, dispatch) { dispatch(state.tr.replaceSelectionWith(hr.create())) }
     })
   }
   if (type = schema.nodes.table)

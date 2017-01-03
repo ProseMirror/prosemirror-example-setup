@@ -57,8 +57,8 @@ function buildKeymap(schema, mapKeys) {
   if (type = schema.nodes.blockquote)
     bind("Ctrl->", wrapIn(type))
   if (type = schema.nodes.hard_break) {
-    let br = type, cmd = chainCommands(exitCode, (state, onAction) => {
-      onAction(state.tr.replaceSelectionWith(br.create()).scrollAction())
+    let br = type, cmd = chainCommands(exitCode, (state, dispatch) => {
+      dispatch(state.tr.replaceSelectionWith(br.create()).scrollIntoView())
       return true
     })
     bind("Mod-Enter", cmd)
@@ -78,8 +78,8 @@ function buildKeymap(schema, mapKeys) {
     for (let i = 1; i <= 6; i++) bind("Shift-Ctrl-" + i, setBlockType(type, {level: i}))
   if (type = schema.nodes.horizontal_rule) {
     let hr = type
-    bind("Mod-_", (state, onAction) => {
-      onAction(state.tr.replaceSelectionWith(hr.create()).scrollAction())
+    bind("Mod-_", (state, dispatch) => {
+      dispatch(state.tr.replaceSelectionWith(hr.create()).scrollIntoView())
       return true
     })
   }
