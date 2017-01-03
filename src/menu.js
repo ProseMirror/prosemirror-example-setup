@@ -37,6 +37,7 @@ function insertImageItem(nodeType) {
         // collaborative setup
         callback(attrs) {
           view.dispatch(view.state.tr.replaceSelectionWith(nodeType.createAndFill(attrs)))
+          view.focus()
         }
       })
     }
@@ -59,6 +60,7 @@ function insertTableItem(tableType) {
         },
         callback({rows, cols}) {
           view.dispatch(view.state.tr.replaceSelectionWith(createTable(tableType, +rows, +cols)).scrollIntoView())
+          view.focus()
         }
       })
     },
@@ -123,6 +125,7 @@ function linkItem(markType) {
         },
         callback(attrs) {
           toggleMark(markType, attrs)(view.state, view.dispatch)
+          view.focus()
         }
       })
     }
