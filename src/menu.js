@@ -90,8 +90,8 @@ function cmdItem(cmd, options) {
 }
 
 function markActive(state, type) {
-  let {from, to, empty} = state.selection
-  if (empty) return type.isInSet(state.storedMarks || state.doc.marksAt(from))
+  let {from, $from, to, empty} = state.selection
+  if (empty) return type.isInSet(state.storedMarks || $from.marks())
   else return state.doc.rangeHasMark(from, to, type)
 }
 
