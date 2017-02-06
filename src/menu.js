@@ -33,9 +33,6 @@ function insertImageItem(nodeType) {
           alt: new TextField({label: "Description",
                               value: attrs ? attrs.title : state.doc.textBetween(from, to, " ")})
         },
-        // FIXME this (and similar uses) won't have the current state
-        // when it runs, leading to problems in, for example, a
-        // collaborative setup
         callback(attrs) {
           view.dispatch(view.state.tr.replaceSelectionWith(nodeType.createAndFill(attrs)))
           view.focus()
