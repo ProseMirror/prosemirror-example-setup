@@ -1,6 +1,6 @@
 {
   "name": "prosemirror-example-setup",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "An example for how to set up a ProseMirror editor",
   "main": "dist/index.js",
   "style": "style/style.css",
@@ -17,15 +17,15 @@
     "url": "git://github.com/prosemirror/prosemirror.git"
   },
   "dependencies": {
-    "prosemirror-inputrules": "^0.17.0",
-    "prosemirror-schema-list": "^0.17.0",
-    "prosemirror-schema-table": "^0.17.0",
-    "prosemirror-keymap": "^0.17.0",
-    "prosemirror-history": "^0.17.0",
-    "prosemirror-commands": "^0.17.0",
-    "prosemirror-state": "^0.17.0",
-    "prosemirror-menu": "^0.17.0",
-    "prosemirror-dropcursor": "^0.17.0"
+    "prosemirror-inputrules": "^0.18.0",
+    "prosemirror-schema-list": "^0.18.0",
+    "prosemirror-schema-table": "^0.18.0",
+    "prosemirror-keymap": "^0.18.0",
+    "prosemirror-history": "^0.18.0",
+    "prosemirror-commands": "^0.18.0",
+    "prosemirror-state": "^0.18.0",
+    "prosemirror-menu": "^0.18.0",
+    "prosemirror-dropcursor": "^0.18.0"
   },
   "devDependencies": {
     "buble": "^0.15.1",
