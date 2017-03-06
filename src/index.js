@@ -5,6 +5,7 @@ const {history} = require("prosemirror-history")
 const {baseKeymap} = require("prosemirror-commands")
 const {Plugin} = require("prosemirror-state")
 const {dropCursor} = require("prosemirror-dropcursor")
+const {menuBar} = require("prosemirror-menu")
 
 const {buildMenuItems} = require("./menu")
 exports.buildMenuItems = buildMenuItems
@@ -35,6 +36,18 @@ exports.buildKeymap = buildKeymap
 //
 //     mapKeys:: ?Object
 //     Can be used to [adjust](#example-setup.buildKeymap) the key bindings created.
+//
+//     menuBar:: ?bool
+//     Set to false to disable the menu bar.
+//
+//     history:: ?bool
+//     Set to false to disable the history plugin.
+//
+//     floatingMenu:: ?bool
+//     Set to false to make the menu bar non-floating.
+//
+//     menuContent:: [[MenuItem]]
+//     Can be used to override the menu content.
 function exampleSetup(options) {
   let plugins = [
     inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
@@ -42,13 +55,15 @@ function exampleSetup(options) {
     keymap(baseKeymap),
     dropCursor()
   ]
-  if (options.history !== false) plugins.push(history())
+  if (options.menuBar !== false)
+    plugins.push(menuBar({floating: options.floatingMenu !== false,
+                          content: options.menuContent || buildMenuItems(options.schema).fullMenu}))
+  if (options.history !== false)
+    plugins.push(history())
 
   return plugins.concat(new Plugin({
     props: {
-      attributes: {class: "ProseMirror-example-setup-style"},
-      menuContent: buildMenuItems(options.schema).fullMenu,
-      floatingMenu: true
+      attributes: {class: "ProseMirror-example-setup-style"}
     }
   }))
 }

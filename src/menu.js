@@ -199,7 +199,7 @@ function wrapListItem(nodeType, options) {
 //
 // **`fullMenu`**`: [[MenuElement]]`
 //   : An array of arrays of menu elements for use as the full menu
-//     for, for example the [menu bar](#menu.MenuBarEditorView).
+//     for, for example the [menu bar](https://github.com/prosemirror/prosemirror-menu#user-content-menubar).
 function buildMenuItems(schema) {
   let r = {}, type
   if (type = schema.marks.strong)

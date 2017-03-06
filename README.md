@@ -49,10 +49,23 @@ resulting array will include the following plugins:
 
 These options are supported:
 
- * **`schema`**: Schema\
+ * **`schema`**`: Schema`\
    The schema to use. This influences the menu items and key bindings
    that are generated. Assumes that node names correspond to those in
    the schema modules in the main distribution.
+
+ * **`mapKeys`**`: ?Object`\
+   Can be used to [adjust](#example-setup.buildKeymap) the key
+   bindings created.
+
+ * **`menuBar`**`: ?bool`\
+   Set to false to disable the menu bar.
+
+ * **`floatingMenu`**`: ?bool`\
+   Set to false to make the menu bar non-floating.
+
+ * **`menuContent`**`: [[MenuItem]]`\
+   Can be used to override the menu content.
 
  * **`history`**: ?bool\
    Set this to `false` to disable adding the history plugin to the
