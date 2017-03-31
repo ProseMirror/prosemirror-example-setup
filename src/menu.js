@@ -2,7 +2,7 @@ const {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
        selectParentNodeItem, undoItem, redoItem, icons, MenuItem} = require("prosemirror-menu")
 const {createTable, addColumnBefore, addColumnAfter,
        removeColumn, addRowBefore, addRowAfter, removeRow} = require("prosemirror-schema-table")
-const {Selection} = require("prosemirror-state")
+const {Selection, NodeSelection} = require("prosemirror-state")
 const {toggleMark} = require("prosemirror-commands")
 const {wrapInList} = require("prosemirror-schema-list")
 const {TextField, openPrompt} = require("./prompt")
@@ -24,7 +24,9 @@ function insertImageItem(nodeType) {
     label: "Image",
     select(state) { return canInsert(state, nodeType) },
     run(state, _, view) {
-      let {node, from, to} = state.selection, attrs = nodeType && node && node.type == nodeType && node.attrs
+      let {from, to} = state.selection, attrs = null
+      if (state.selection instanceof NodeSelection && state.selection.node.type == nodeType)
+        attrs = state.selection.node.attrs
       openPrompt({
         title: "Insert image",
         fields: {
