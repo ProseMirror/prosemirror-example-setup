@@ -2,6 +2,7 @@ const {wrapIn, setBlockType, chainCommands, toggleMark, exitCode} = require("pro
 const {selectNextCell, selectPreviousCell} = require("prosemirror-schema-table")
 const {wrapInList, splitListItem, liftListItem, sinkListItem} = require("prosemirror-schema-list")
 const {undo, redo} = require("prosemirror-history")
+const {undoInputRule} = require("prosemirror-inputrules")
 
 const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false
 
@@ -24,6 +25,7 @@ const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : f
 //   the same time splitting the list item
 // * **Mod-Enter** to insert a hard break
 // * **Mod-_** to insert a horizontal rule
+// * **Backspace** to undo an input rule
 //
 // You can suppress or map these bindings by passing a `mapKeys`
 // argument, which maps key names (say `"Mod-B"` to either `false`, to
@@ -41,6 +43,7 @@ function buildKeymap(schema, mapKeys) {
 
   bind("Mod-z", undo)
   bind("Shift-Mod-z", redo)
+  bind("Backspace", undoInputRule)
   if (!mac) bind("Mod-y", redo)
 
   if (type = schema.marks.strong)
