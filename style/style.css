@@ -15,6 +15,16 @@
   border-top: 2px solid silver;
 }
 
+.ProseMirror ul, .ProseMirror ol {
+  padding-left: 30px;
+}
+
+.ProseMirror blockquote {
+  padding-left: 1em;
+  border-left: 3px solid #eee;
+  margin-left: 0; margin-right: 0;
+}
+
 .ProseMirror-example-setup-style img {
   cursor: default;
 }
