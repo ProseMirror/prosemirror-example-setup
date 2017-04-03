@@ -103,9 +103,12 @@ function markItem(markType, options) {
 }
 
 function linkItem(markType) {
-  return markItem(markType, {
+  return new MenuItem({
     title: "Add or remove link",
     icon: icons.link,
+    active(state) { return markActive(state, markType) },
+    select(state) { return !state.selection.empty },
+    onDeselected: "disable",
     run(state, dispatch, view) {
       if (markActive(state, markType)) {
         toggleMark(markType)(state, dispatch)
