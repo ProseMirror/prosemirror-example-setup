@@ -34,6 +34,6 @@
   "scripts": {
     "test": "true",
     "build": "rimraf dist && buble -i src -o dist",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   }
 }
