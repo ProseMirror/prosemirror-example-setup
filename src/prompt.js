@@ -1,6 +1,6 @@
 const prefix = "ProseMirror-prompt"
 
-function openPrompt(options) {
+export function openPrompt(options) {
   let wrapper = document.body.appendChild(document.createElement("div"))
   wrapper.className = prefix
 
@@ -69,7 +69,6 @@ function openPrompt(options) {
   let input = form.elements[0]
   if (input) input.focus()
 }
-exports.openPrompt = openPrompt
 
 function getValues(fields, domFields) {
   let result = Object.create(null), i = 0
@@ -97,7 +96,7 @@ function reportInvalid(dom, message) {
 }
 
 // ::- The type of field that `FieldPrompt` expects to be passed to it.
-class Field {
+export class Field {
   // :: (Object)
   // Create a field with the given options. Options support by all
   // field types are:
@@ -137,10 +136,9 @@ class Field {
     return this.options.clean ? this.options.clean(value) : value
   }
 }
-exports.Field = Field
 
 // ::- A field class for single-line text fields.
-class TextField extends Field {
+export class TextField extends Field {
   render() {
     let input = document.createElement("input")
     input.type = "text"
@@ -150,14 +148,13 @@ class TextField extends Field {
     return input
   }
 }
-exports.TextField = TextField
 
 
 // ::- A field class for dropdown fields based on a plain `<select>`
 // tag. Expects an option `options`, which should be an array of
 // `{value: string, label: string}` objects, or a function taking a
 // `ProseMirror` instance and returning such an array.
-class SelectField extends Field {
+export class SelectField extends Field {
   render() {
     let select = document.createElement("select")
     this.options.options.forEach(o => {
@@ -169,4 +166,3 @@ class SelectField extends Field {
     return select
   }
 }
-exports.SelectField = SelectField

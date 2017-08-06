@@ -1,8 +1,8 @@
-const {wrapIn, setBlockType, chainCommands, toggleMark, exitCode} = require("prosemirror-commands")
-const {selectNextCell, selectPreviousCell} = require("prosemirror-schema-table")
-const {wrapInList, splitListItem, liftListItem, sinkListItem} = require("prosemirror-schema-list")
-const {undo, redo} = require("prosemirror-history")
-const {undoInputRule} = require("prosemirror-inputrules")
+import {wrapIn, setBlockType, chainCommands, toggleMark, exitCode} from "prosemirror-commands"
+import {selectNextCell, selectPreviousCell} from "prosemirror-schema-table"
+import {wrapInList, splitListItem, liftListItem, sinkListItem} from "prosemirror-schema-list"
+import {undo, redo} from "prosemirror-history"
+import {undoInputRule} from "prosemirror-inputrules"
 
 const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false
 
@@ -30,7 +30,7 @@ const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : f
 // You can suppress or map these bindings by passing a `mapKeys`
 // argument, which maps key names (say `"Mod-B"` to either `false`, to
 // remove the binding, or a new key name string.
-function buildKeymap(schema, mapKeys) {
+export function buildKeymap(schema, mapKeys) {
   let keys = {}, type
   function bind(key, cmd) {
     if (mapKeys) {
@@ -93,4 +93,3 @@ function buildKeymap(schema, mapKeys) {
   }
   return keys
 }
-exports.buildKeymap = buildKeymap

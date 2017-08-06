@@ -1,11 +1,11 @@
-const {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
-       selectParentNodeItem, undoItem, redoItem, icons, MenuItem} = require("prosemirror-menu")
-const {createTable, addColumnBefore, addColumnAfter,
-       removeColumn, addRowBefore, addRowAfter, removeRow} = require("prosemirror-schema-table")
-const {Selection, NodeSelection} = require("prosemirror-state")
-const {toggleMark} = require("prosemirror-commands")
-const {wrapInList} = require("prosemirror-schema-list")
-const {TextField, openPrompt} = require("./prompt")
+import {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
+       selectParentNodeItem, undoItem, redoItem, icons, MenuItem} from "prosemirror-menu"
+import {createTable, addColumnBefore, addColumnAfter,
+       removeColumn, addRowBefore, addRowAfter, removeRow} from "prosemirror-schema-table"
+import {Selection, NodeSelection} from "prosemirror-state"
+import {toggleMark} from "prosemirror-commands"
+import {wrapInList} from "prosemirror-schema-list"
+import {TextField, openPrompt} from "./prompt"
 
 // Helpers to create specific types of items
 
@@ -205,7 +205,7 @@ function wrapListItem(nodeType, options) {
 // **`fullMenu`**`: [[MenuElement]]`
 //   : An array of arrays of menu elements for use as the full menu
 //     for, for example the [menu bar](https://github.com/prosemirror/prosemirror-menu#user-content-menubar).
-function buildMenuItems(schema) {
+export function buildMenuItems(schema) {
   let r = {}, type
   if (type = schema.marks.strong)
     r.toggleStrong = markItem(type, {title: "Toggle strong style", icon: icons.strong})
@@ -286,4 +286,3 @@ function buildMenuItems(schema) {
 
   return r
 }
-exports.buildMenuItems = buildMenuItems

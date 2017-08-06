@@ -1,16 +1,14 @@
-const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
-       inputRules, allInputRules} = require("prosemirror-inputrules")
-const {keymap} = require("prosemirror-keymap")
-const {history} = require("prosemirror-history")
-const {baseKeymap} = require("prosemirror-commands")
-const {Plugin} = require("prosemirror-state")
-const {dropCursor} = require("prosemirror-dropcursor")
-const {menuBar} = require("prosemirror-menu")
+import {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
+        inputRules, allInputRules} from "prosemirror-inputrules"
+import {keymap} from "prosemirror-keymap"
+import {history} from "prosemirror-history"
+import {baseKeymap} from "prosemirror-commands"
+import {Plugin} from "prosemirror-state"
+import {dropCursor} from "prosemirror-dropcursor"
+import {menuBar} from "prosemirror-menu"
 
-const {buildMenuItems} = require("./menu")
-exports.buildMenuItems = buildMenuItems
-const {buildKeymap} = require("./keymap")
-exports.buildKeymap = buildKeymap
+import {buildMenuItems} from "./menu"
+import {buildKeymap} from "./keymap"
 
 // !! This module exports helper functions for deriving a set of basic
 // menu items, input rules, or key bindings from a schema. These
@@ -48,7 +46,7 @@ exports.buildKeymap = buildKeymap
 //
 //     menuContent:: [[MenuItem]]
 //     Can be used to override the menu content.
-function exampleSetup(options) {
+export function exampleSetup(options) {
   let plugins = [
     inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
     keymap(buildKeymap(options.schema, options.mapKeys)),
@@ -67,12 +65,11 @@ function exampleSetup(options) {
     }
   }))
 }
-exports.exampleSetup = exampleSetup
 
 // :: (Schema) → [InputRule]
 // A set of input rules for creating the basic block quotes, lists,
 // code blocks, and heading.
-function buildInputRules(schema) {
+export function buildInputRules(schema) {
   let result = [], type
   if (type = schema.nodes.blockquote) result.push(blockQuoteRule(type))
   if (type = schema.nodes.ordered_list) result.push(orderedListRule(type))
@@ -81,4 +78,3 @@ function buildInputRules(schema) {
   if (type = schema.nodes.heading) result.push(headingRule(type, 6))
   return result
 }
-exports.buildInputRules = buildInputRules
