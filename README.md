@@ -33,19 +33,23 @@ resulting array will include the following plugins:
 
  * Input rules for smart quotes and creating the block types in the
    schema using markdown conventions (say `"> "` to create a
-   blockquote).
+   blockquote)
 
  * A keymap that defines keys to create an manipulate the nodes in the
-   schema.
+   schema
 
  * A keymap binding the default keys provided by the
-   prosemirror-commands module.
+   prosemirror-commands module
 
- * The undo history plugin.
+ * The undo history plugin
+
+ * The drop cursor plugin
+
+ * The gap cursor plugin
 
  * A custom plugin that adds a `menuContent` prop for the
    prosemirror-menu wrapper, and a CSS class that enables the
-   additional styling defined in `style/style.css` in this package.
+   additional styling defined in `style/style.css` in this package
 
 These options are supported:
 

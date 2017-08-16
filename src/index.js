@@ -5,6 +5,7 @@ import {history} from "prosemirror-history"
 import {baseKeymap} from "prosemirror-commands"
 import {Plugin} from "prosemirror-state"
 import {dropCursor} from "prosemirror-dropcursor"
+import {gapCursor} from "prosemirror-gapcursor"
 import {menuBar} from "prosemirror-menu"
 
 import {buildMenuItems} from "./menu"
@@ -51,7 +52,8 @@ export function exampleSetup(options) {
     inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
     keymap(buildKeymap(options.schema, options.mapKeys)),
     keymap(baseKeymap),
-    dropCursor()
+    dropCursor(),
+    gapCursor()
   ]
   if (options.menuBar !== false)
     plugins.push(menuBar({floating: options.floatingMenu !== false,

@@ -25,7 +25,8 @@
     "prosemirror-commands": "^0.22.0",
     "prosemirror-state": "^0.22.0",
     "prosemirror-menu": "^0.22.0",
-    "prosemirror-dropcursor": "^0.22.0"
+    "prosemirror-dropcursor": "^0.22.0",
+    "prosemirror-gapcursor": "^0.22.0"
   },
   "devDependencies": {
     "rollup": "^0.45.2",

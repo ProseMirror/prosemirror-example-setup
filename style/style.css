@@ -30,6 +30,7 @@
 
 .ProseMirror-example-setup-style table {
   border-collapse: collapse;
+  margin: 1em 0;
 }
 
 .ProseMirror-example-setup-style td {
