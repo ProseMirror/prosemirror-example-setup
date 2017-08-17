@@ -11,6 +11,8 @@ import {menuBar} from "prosemirror-menu"
 import {buildMenuItems} from "./menu"
 import {buildKeymap} from "./keymap"
 
+export {buildMenuItems}
+
 // !! This module exports helper functions for deriving a set of basic
 // menu items, input rules, or key bindings from a schema. These
 // values need to know about the schema for two reasons—they need
