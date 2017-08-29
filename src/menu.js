@@ -33,7 +33,7 @@ function insertImageItem(nodeType) {
           src: new TextField({label: "Location", required: true, value: attrs && attrs.src}),
           title: new TextField({label: "Title", value: attrs && attrs.title}),
           alt: new TextField({label: "Description",
-                              value: attrs ? attrs.title : state.doc.textBetween(from, to, " ")})
+                              value: attrs ? attrs.alt : state.doc.textBetween(from, to, " ")})
         },
         callback(attrs) {
           view.dispatch(view.state.tr.replaceSelectionWith(nodeType.createAndFill(attrs)))
