@@ -22,7 +22,7 @@ function insertImageItem(nodeType) {
   return new MenuItem({
     title: "Insert image",
     label: "Image",
-    select(state) { return canInsert(state, nodeType) },
+    enable(state) { return canInsert(state, nodeType) },
     run(state, _, view) {
       let {from, to} = state.selection, attrs = null
       if (state.selection instanceof NodeSelection && state.selection.node.type == nodeType)
@@ -66,7 +66,7 @@ function insertTableItem(tableType) {
         }
       })
     },
-    select(state) {
+    enable(state) {
       let $from = state.selection.$from
       for (let d = $from.depth; d >= 0; d--) {
         let index = $from.index(d)
@@ -81,10 +81,12 @@ function insertTableItem(tableType) {
 function cmdItem(cmd, options) {
   let passedOptions = {
     label: options.title,
-    run: cmd,
-    select(state) { return cmd(state) }
+    run: cmd
   }
   for (let prop in options) passedOptions[prop] = options[prop]
+  if ((!options.enable || options.enable === true) && !options.select)
+    passedOptions[options.enable ? "enable" : "select"] = state => cmd(state)
+
   return new MenuItem(passedOptions)
 }
 
@@ -96,7 +98,8 @@ function markActive(state, type) {
 
 function markItem(markType, options) {
   let passedOptions = {
-    active(state) { return markActive(state, markType) }
+    active(state) { return markActive(state, markType) },
+    enable: true
   }
   for (let prop in options) passedOptions[prop] = options[prop]
   return cmdItem(toggleMark(markType), passedOptions)
@@ -107,7 +110,7 @@ function linkItem(markType) {
     title: "Add or remove link",
     icon: icons.link,
     active(state) { return markActive(state, markType) },
-    select(state) { return !state.selection.empty },
+    enable(state) { return !state.selection.empty },
     run(state, dispatch, view) {
       if (markActive(state, markType)) {
         toggleMark(markType)(state, dispatch)
@@ -220,19 +223,16 @@ export function buildMenuItems(schema) {
   if (type = schema.nodes.bullet_list)
     r.wrapBulletList = wrapListItem(type, {
       title: "Wrap in bullet list",
-      onDeselected: "hide",
       icon: icons.bulletList
     })
   if (type = schema.nodes.ordered_list)
     r.wrapOrderedList = wrapListItem(type, {
       title: "Wrap in ordered list",
-      onDeselected: "hide",
       icon: icons.orderedList
     })
   if (type = schema.nodes.blockquote)
     r.wrapBlockQuote = wrapItem(type, {
       title: "Wrap in block quote",
-      onDeselected: "hide",
       icon: icons.blockquote
     })
   if (type = schema.nodes.paragraph)
@@ -257,7 +257,7 @@ export function buildMenuItems(schema) {
     r.insertHorizontalRule = new MenuItem({
       title: "Insert horizontal rule",
       label: "Horizontal rule",
-      select(state) { return canInsert(state, hr) },
+      enable(state) { return canInsert(state, hr) },
       run(state, dispatch) { dispatch(state.tr.replaceSelectionWith(hr.create())) }
     })
   }
@@ -279,7 +279,7 @@ export function buildMenuItems(schema) {
   ]), {label: "Heading"})]), {label: "Type..."})
   let tableItems = cut([r.addRowBefore, r.addRowAfter, r.removeRow, r.addColumnBefore, r.addColumnAfter, r.removeColumn])
   if (tableItems.length)
-    r.tableMenu = new Dropdown(tableItems, {label: "Table", onDeselected: "hide"})
+    r.tableMenu = new Dropdown(tableItems, {label: "Table"})
 
   r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink])]
   r.blockMenu = [cut([r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
