@@ -1,6 +1,5 @@
 import {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
        selectParentNodeItem, undoItem, redoItem, icons, MenuItem} from "prosemirror-menu"
-import {Selection, NodeSelection} from "prosemirror-state"
 import {toggleMark} from "prosemirror-commands"
 import {wrapInList} from "prosemirror-schema-list"
 import {TextField, openPrompt} from "./prompt"
@@ -40,10 +39,6 @@ function insertImageItem(nodeType) {
       })
     }
   })
-}
-
-function positiveInteger(value) {
-  if (!/^[1-9]\d*$/.test(value)) return "Should be a positive integer"
 }
 
 function cmdItem(cmd, options) {
