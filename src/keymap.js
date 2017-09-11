@@ -1,5 +1,4 @@
 import {wrapIn, setBlockType, chainCommands, toggleMark, exitCode} from "prosemirror-commands"
-import {selectNextCell, selectPreviousCell} from "prosemirror-schema-table"
 import {wrapInList, splitListItem, liftListItem, sinkListItem} from "prosemirror-schema-list"
 import {undo, redo} from "prosemirror-history"
 import {undoInputRule} from "prosemirror-inputrules"
@@ -87,9 +86,5 @@ export function buildKeymap(schema, mapKeys) {
     })
   }
 
-  if (schema.nodes.table_row) {
-    bind("Tab", selectNextCell)
-    bind("Shift-Tab", selectPreviousCell)
-  }
   return keys
 }

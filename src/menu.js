@@ -1,7 +1,5 @@
 import {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
        selectParentNodeItem, undoItem, redoItem, icons, MenuItem} from "prosemirror-menu"
-import {createTable, addColumnBefore, addColumnAfter,
-       removeColumn, addRowBefore, addRowAfter, removeRow} from "prosemirror-schema-table"
 import {Selection, NodeSelection} from "prosemirror-state"
 import {toggleMark} from "prosemirror-commands"
 import {wrapInList} from "prosemirror-schema-list"
@@ -46,36 +44,6 @@ function insertImageItem(nodeType) {
 
 function positiveInteger(value) {
   if (!/^[1-9]\d*$/.test(value)) return "Should be a positive integer"
-}
-
-function insertTableItem(tableType) {
-  return new MenuItem({
-    title: "Insert a table",
-    run(_, _a, view) {
-      openPrompt({
-        title: "Insert table",
-        fields: {
-          rows: new TextField({label: "Rows", validate: positiveInteger}),
-          cols: new TextField({label: "Columns", validate: positiveInteger})
-        },
-        callback({rows, cols}) {
-          let tr = view.state.tr.replaceSelectionWith(createTable(tableType, +rows, +cols))
-          tr.setSelection(Selection.near(tr.doc.resolve(view.state.selection.from)))
-          view.dispatch(tr.scrollIntoView())
-          view.focus()
-        }
-      })
-    },
-    enable(state) {
-      let $from = state.selection.$from
-      for (let d = $from.depth; d >= 0; d--) {
-        let index = $from.index(d)
-        if ($from.node(d).canReplaceWith(index, index, tableType)) return true
-      }
-      return false
-    },
-    label: "Table"
-  })
 }
 
 function cmdItem(cmd, options) {
@@ -179,12 +147,6 @@ function wrapListItem(nodeType, options) {
 //   : A menu item to set the current textblock to be a
 //     [code block](#schema-basic.CodeBlock).
 //
-// **`insertTable`**`: MenuItem`
-//   : An item to insert a [table](#schema-table).
-//
-// **`addRowBefore`**, **`addRowAfter`**, **`removeRow`**, **`addColumnBefore`**, **`addColumnAfter`**, **`removeColumn`**`: MenuItem`
-//   : Table-manipulation items.
-//
 // **`makeHead[N]`**`: MenuItem`
 //   : Where _N_ is 1 to 6. Menu items to set the current textblock to
 //     be a [heading](#schema-basic.Heading) of level _N_.
@@ -261,28 +223,15 @@ export function buildMenuItems(schema) {
       run(state, dispatch) { dispatch(state.tr.replaceSelectionWith(hr.create())) }
     })
   }
-  if (type = schema.nodes.table)
-    r.insertTable = insertTableItem(type)
-  if (type = schema.nodes.table_row) {
-    r.addRowBefore = cmdItem(addRowBefore, {title: "Add row before"})
-    r.addRowAfter = cmdItem(addRowAfter, {title: "Add row after"})
-    r.removeRow = cmdItem(removeRow, {title: "Remove row"})
-    r.addColumnBefore = cmdItem(addColumnBefore, {title: "Add column before"})
-    r.addColumnAfter = cmdItem(addColumnAfter, {title: "Add column after"})
-    r.removeColumn = cmdItem(removeColumn, {title: "Remove column"})
-  }
 
   let cut = arr => arr.filter(x => x)
-  r.insertMenu = new Dropdown(cut([r.insertImage, r.insertHorizontalRule, r.insertTable]), {label: "Insert"})
+  r.insertMenu = new Dropdown(cut([r.insertImage, r.insertHorizontalRule]), {label: "Insert"})
   r.typeMenu = new Dropdown(cut([r.makeParagraph, r.makeCodeBlock, r.makeHead1 && new DropdownSubmenu(cut([
     r.makeHead1, r.makeHead2, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6
   ]), {label: "Heading"})]), {label: "Type..."})
-  let tableItems = cut([r.addRowBefore, r.addRowAfter, r.removeRow, r.addColumnBefore, r.addColumnAfter, r.removeColumn])
-  if (tableItems.length)
-    r.tableMenu = new Dropdown(tableItems, {label: "Table"})
 
   r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink])]
-  r.blockMenu = [cut([r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
+  r.blockMenu = [cut([r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
                       liftItem, selectParentNodeItem])]
   r.fullMenu = r.inlineMenu.concat([[r.insertMenu, r.typeMenu]], [[undoItem, redoItem]], r.blockMenu)
 
