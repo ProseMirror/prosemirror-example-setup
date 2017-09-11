@@ -108,7 +108,6 @@ function linkItem(markType) {
     icon: icons.link,
     active(state) { return markActive(state, markType) },
     select(state) { return !state.selection.empty },
-    onDeselected: "disable",
     run(state, dispatch, view) {
       if (markActive(state, markType)) {
         toggleMark(markType)(state, dispatch)
@@ -221,16 +220,19 @@ export function buildMenuItems(schema) {
   if (type = schema.nodes.bullet_list)
     r.wrapBulletList = wrapListItem(type, {
       title: "Wrap in bullet list",
+      onDeselected: "hide",
       icon: icons.bulletList
     })
   if (type = schema.nodes.ordered_list)
     r.wrapOrderedList = wrapListItem(type, {
       title: "Wrap in ordered list",
+      onDeselected: "hide",
       icon: icons.orderedList
     })
   if (type = schema.nodes.blockquote)
     r.wrapBlockQuote = wrapItem(type, {
       title: "Wrap in block quote",
+      onDeselected: "hide",
       icon: icons.blockquote
     })
   if (type = schema.nodes.paragraph)
@@ -277,12 +279,12 @@ export function buildMenuItems(schema) {
   ]), {label: "Heading"})]), {label: "Type..."})
   let tableItems = cut([r.addRowBefore, r.addRowAfter, r.removeRow, r.addColumnBefore, r.addColumnAfter, r.removeColumn])
   if (tableItems.length)
-    r.tableMenu = new Dropdown(tableItems, {label: "Table"})
+    r.tableMenu = new Dropdown(tableItems, {label: "Table", onDeselected: "hide"})
 
-  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink]), [r.insertMenu]]
-  r.blockMenu = [cut([r.typeMenu, r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
+  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink])]
+  r.blockMenu = [cut([r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
                       liftItem, selectParentNodeItem])]
-  r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem, redoItem]])
+  r.fullMenu = r.inlineMenu.concat([[r.insertMenu, r.typeMenu]], [[undoItem, redoItem]], r.blockMenu)
 
   return r
 }
