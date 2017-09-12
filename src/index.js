@@ -1,5 +1,3 @@
-import {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
-        inputRules, allInputRules} from "prosemirror-inputrules"
 import {keymap} from "prosemirror-keymap"
 import {history} from "prosemirror-history"
 import {baseKeymap} from "prosemirror-commands"
@@ -10,6 +8,7 @@ import {menuBar} from "prosemirror-menu"
 
 import {buildMenuItems} from "./menu"
 import {buildKeymap} from "./keymap"
+import {buildInputRules} from "./inputrules"
 
 export {buildMenuItems}
 
@@ -51,7 +50,7 @@ export {buildMenuItems}
 //     Can be used to override the menu content.
 export function exampleSetup(options) {
   let plugins = [
-    inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
+    buildInputRules(options.schema),
     keymap(buildKeymap(options.schema, options.mapKeys)),
     keymap(baseKeymap),
     dropCursor(),
@@ -68,17 +67,4 @@ export function exampleSetup(options) {
       attributes: {class: "ProseMirror-example-setup-style"}
     }
   }))
-}
-
-// :: (Schema) → [InputRule]
-// A set of input rules for creating the basic block quotes, lists,
-// code blocks, and heading.
-export function buildInputRules(schema) {
-  let result = [], type
-  if (type = schema.nodes.blockquote) result.push(blockQuoteRule(type))
-  if (type = schema.nodes.ordered_list) result.push(orderedListRule(type))
-  if (type = schema.nodes.bullet_list) result.push(bulletListRule(type))
-  if (type = schema.nodes.code_block) result.push(codeBlockRule(type))
-  if (type = schema.nodes.heading) result.push(headingRule(type, 6))
-  return result
 }
