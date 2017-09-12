@@ -1,4 +1,5 @@
-import {wrapIn, setBlockType, chainCommands, toggleMark, exitCode} from "prosemirror-commands"
+import {wrapIn, setBlockType, chainCommands, toggleMark, exitCode,
+        joinUp, joinDown, lift, selectParentNode} from "prosemirror-commands"
 import {wrapInList, splitListItem, liftListItem, sinkListItem} from "prosemirror-schema-list"
 import {undo, redo} from "prosemirror-history"
 import {undoInputRule} from "prosemirror-inputrules"
@@ -25,6 +26,10 @@ const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : f
 // * **Mod-Enter** to insert a hard break
 // * **Mod-_** to insert a horizontal rule
 // * **Backspace** to undo an input rule
+// * **Alt-ArrowUp** to `joinUp`
+// * **Alt-ArrowDown** to `joinDown`
+// * **Mod-BracketLeft** to `lift`
+// * **Escape** to `selectParentNode`
 //
 // You can suppress or map these bindings by passing a `mapKeys`
 // argument, which maps key names (say `"Mod-B"` to either `false`, to
@@ -40,10 +45,16 @@ export function buildKeymap(schema, mapKeys) {
     keys[key] = cmd
   }
 
+
   bind("Mod-z", undo)
   bind("Shift-Mod-z", redo)
   bind("Backspace", undoInputRule)
   if (!mac) bind("Mod-y", redo)
+
+  bind("Alt-ArrowUp", joinUp)
+  bind("Alt-ArrowDown", joinDown)
+  bind("Mod-BracketLeft", lift)
+  bind("Escape", selectParentNode)
 
   if (type = schema.marks.strong)
     bind("Mod-b", toggleMark(type))
