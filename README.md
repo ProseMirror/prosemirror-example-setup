@@ -12,8 +12,8 @@ editor. It is not meant to be very reusable, though it might be
 helpful to get something up-and-running quickly.
 
 The [project page](http://prosemirror.net) has more information, a
-number of [demos](http://prosemirror.net/#demos) and the
-[documentation](http://prosemirror.net/docs.html).
+number of [examples](http://prosemirror.net/examples/) and the
+[documentation](http://prosemirror.net/docs/).
 
 This code is released under an
 [MIT license](https://github.com/prosemirror/prosemirror/tree/master/LICENSE).
