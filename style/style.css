@@ -28,17 +28,6 @@
   cursor: default;
 }
 
-.ProseMirror-example-setup-style table {
-  border-collapse: collapse;
-  margin: 1em 0;
-}
-
-.ProseMirror-example-setup-style td {
-  vertical-align: top;
-  border: 1px solid #ddd;
-  padding: 3px 5px;
-}
-
 .ProseMirror-prompt {
   background: white;
   padding: 5px 10px 5px 15px;
