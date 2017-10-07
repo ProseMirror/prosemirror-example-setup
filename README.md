@@ -171,3 +171,8 @@ remove the binding, or a new key name string.
 
 A set of input rules for creating the basic block quotes, lists,
 code blocks, and heading.
+
+We aim to be an inclusive, welcoming community. To make that explicit,
+we have a [code of
+conduct](http://contributor-covenant.org/version/1/1/0/) that applies
+to communication around the project.
