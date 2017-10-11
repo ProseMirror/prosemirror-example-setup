@@ -10,7 +10,7 @@ import {buildMenuItems} from "./menu"
 import {buildKeymap} from "./keymap"
 import {buildInputRules} from "./inputrules"
 
-export {buildMenuItems, buildKeymap}
+export {buildMenuItems, buildKeymap, buildInputRules}
 
 // !! This module exports helper functions for deriving a set of basic
 // menu items, input rules, or key bindings from a schema. These
