@@ -85,12 +85,7 @@ function linkItem(markType) {
         fields: {
           href: new TextField({
             label: "Link target",
-            required: true,
-            clean: (val) => {
-              if (!/^https?:\/\//i.test(val))
-                val = 'http://' + val
-              return val
-            }
+            required: true
           }),
           title: new TextField({label: "Title"})
         },
