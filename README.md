@@ -36,7 +36,7 @@ resulting array will include the following plugins:
    schema using markdown conventions (say `"> "` to create a
    blockquote)
 
- * A keymap that defines keys to create an manipulate the nodes in the
+ * A keymap that defines keys to create and manipulate the nodes in the
    schema
 
  * A keymap binding the default keys provided by the
@@ -60,7 +60,7 @@ These options are supported:
    the schema modules in the main distribution.
 
  * **`mapKeys`**`: ?Object`\
-   Can be used to [adjust](#example-setup.buildKeymap) the key
+   Can be used to [adjust](#build-key-map) the key
    bindings created.
 
  * **`menuBar`**`: ?bool`\
@@ -142,7 +142,7 @@ scratch:
    An array of arrays of menu elements for use as the full menu
    for, for example the [menu bar](#menu.MenuBarEditorView).
 
-**`buildKeymap`**`(schema: Schema, remap: ?Object) → Object`
+<a name="build-key-map"></a>**`buildKeymap`**`(schema: Schema, remap: ?Object) → Object`
 
 Inspect the given schema looking for marks and nodes from the
 basic schema, and if found, add key bindings related to them.
