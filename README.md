@@ -1,8 +1,8 @@
 # prosemirror-example-setup
 
-[ [**WEBSITE**](http://prosemirror.net) | [**ISSUES**](https://github.com/prosemirror/prosemirror-example-setup/issues) | [**FORUM**](https://discuss.prosemirror.net) | [**GITTER**](https://gitter.im/ProseMirror/prosemirror) ]
+[ [**WEBSITE**](https://prosemirror.net) | [**ISSUES**](https://github.com/prosemirror/prosemirror-example-setup/issues) | [**FORUM**](https://discuss.prosemirror.net) | [**GITTER**](https://gitter.im/ProseMirror/prosemirror) ]
 
-This is a non-core example module for [ProseMirror](http://prosemirror.net).
+This is a non-core example module for [ProseMirror](https://prosemirror.net).
 ProseMirror is a well-behaved rich semantic content editor based on
 contentEditable, with support for collaborative editing and custom
 document schemas.
@@ -12,9 +12,9 @@ tie the modules that make up ProseMirror into an actual presentable
 editor. It is not meant to be very reusable, though it might be
 helpful to get something up-and-running quickly.
 
-The [project page](http://prosemirror.net) has more information, a
-number of [examples](http://prosemirror.net/examples/) and the
-[documentation](http://prosemirror.net/docs/).
+The [project page](https://prosemirror.net) has more information, a
+number of [examples](https://prosemirror.net/examples/) and the
+[documentation](https://prosemirror.net/docs/).
 
 This code is released under an
 [MIT license](https://github.com/prosemirror/prosemirror/tree/master/LICENSE).
