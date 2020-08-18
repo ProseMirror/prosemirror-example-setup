@@ -29,8 +29,8 @@
     "prosemirror-gapcursor": "^1.0.0"
   },
   "devDependencies": {
-    "rollup": "^1.26.3",
-    "@rollup/plugin-buble": "^0.20.0"
+    "rollup": "^2.26.3",
+    "@rollup/plugin-buble": "^0.21.3"
   },
   "scripts": {
     "test": "true",
