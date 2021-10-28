@@ -4,7 +4,7 @@ import {wrapInList, splitListItem, liftListItem, sinkListItem} from "prosemirror
 import {undo, redo} from "prosemirror-history"
 import {undoInputRule} from "prosemirror-inputrules"
 
-const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false
+const mac = typeof navigator != "undefined" ? /Mac|iPad/.test(navigator.platform) : false
 
 // :: (Schema, ?Object) → Object
 // Inspect the given schema looking for marks and nodes from the
