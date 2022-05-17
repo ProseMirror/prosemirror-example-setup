@@ -3,40 +3,41 @@ import {wrapIn, setBlockType, chainCommands, toggleMark, exitCode,
 import {wrapInList, splitListItem, liftListItem, sinkListItem} from "prosemirror-schema-list"
 import {undo, redo} from "prosemirror-history"
 import {undoInputRule} from "prosemirror-inputrules"
+import {Command} from "prosemirror-state"
+import {Schema} from "prosemirror-model"
 
-const mac = typeof navigator != "undefined" ? /Mac/.test(navigator.platform) : false
+const mac = typeof navigator != "undefined" ? /Mac|iP(hone|[oa]d)/.test(navigator.platform) : false
 
-// :: (Schema, ?Object) → Object
-// Inspect the given schema looking for marks and nodes from the
-// basic schema, and if found, add key bindings related to them.
-// This will add:
-//
-// * **Mod-b** for toggling [strong](#schema-basic.StrongMark)
-// * **Mod-i** for toggling [emphasis](#schema-basic.EmMark)
-// * **Mod-`** for toggling [code font](#schema-basic.CodeMark)
-// * **Ctrl-Shift-0** for making the current textblock a paragraph
-// * **Ctrl-Shift-1** to **Ctrl-Shift-Digit6** for making the current
-//   textblock a heading of the corresponding level
-// * **Ctrl-Shift-Backslash** to make the current textblock a code block
-// * **Ctrl-Shift-8** to wrap the selection in an ordered list
-// * **Ctrl-Shift-9** to wrap the selection in a bullet list
-// * **Ctrl->** to wrap the selection in a block quote
-// * **Enter** to split a non-empty textblock in a list item while at
-//   the same time splitting the list item
-// * **Mod-Enter** to insert a hard break
-// * **Mod-_** to insert a horizontal rule
-// * **Backspace** to undo an input rule
-// * **Alt-ArrowUp** to `joinUp`
-// * **Alt-ArrowDown** to `joinDown`
-// * **Mod-BracketLeft** to `lift`
-// * **Escape** to `selectParentNode`
-//
-// You can suppress or map these bindings by passing a `mapKeys`
-// argument, which maps key names (say `"Mod-B"` to either `false`, to
-// remove the binding, or a new key name string.
-export function buildKeymap(schema, mapKeys) {
-  let keys = {}, type
-  function bind(key, cmd) {
+/// Inspect the given schema looking for marks and nodes from the
+/// basic schema, and if found, add key bindings related to them.
+/// This will add:
+///
+/// * **Mod-b** for toggling [strong](#schema-basic.StrongMark)
+/// * **Mod-i** for toggling [emphasis](#schema-basic.EmMark)
+/// * **Mod-`** for toggling [code font](#schema-basic.CodeMark)
+/// * **Ctrl-Shift-0** for making the current textblock a paragraph
+/// * **Ctrl-Shift-1** to **Ctrl-Shift-Digit6** for making the current
+///   textblock a heading of the corresponding level
+/// * **Ctrl-Shift-Backslash** to make the current textblock a code block
+/// * **Ctrl-Shift-8** to wrap the selection in an ordered list
+/// * **Ctrl-Shift-9** to wrap the selection in a bullet list
+/// * **Ctrl->** to wrap the selection in a block quote
+/// * **Enter** to split a non-empty textblock in a list item while at
+///   the same time splitting the list item
+/// * **Mod-Enter** to insert a hard break
+/// * **Mod-_** to insert a horizontal rule
+/// * **Backspace** to undo an input rule
+/// * **Alt-ArrowUp** to `joinUp`
+/// * **Alt-ArrowDown** to `joinDown`
+/// * **Mod-BracketLeft** to `lift`
+/// * **Escape** to `selectParentNode`
+///
+/// You can suppress or map these bindings by passing a `mapKeys`
+/// argument, which maps key names (say `"Mod-B"` to either `false`, to
+/// remove the binding, or a new key name string.
+export function buildKeymap(schema: Schema, mapKeys?: {[key: string]: false | string}) {
+  let keys: {[key: string]: Command} = {}, type
+  function bind(key: string, cmd: Command) {
     if (mapKeys) {
       let mapped = mapKeys[key]
       if (mapped === false) return
@@ -44,7 +45,6 @@ export function buildKeymap(schema, mapKeys) {
     }
     keys[key] = cmd
   }
-
 
   bind("Mod-z", undo)
   bind("Shift-Mod-z", redo)
@@ -75,7 +75,7 @@ export function buildKeymap(schema, mapKeys) {
     bind("Ctrl->", wrapIn(type))
   if (type = schema.nodes.hard_break) {
     let br = type, cmd = chainCommands(exitCode, (state, dispatch) => {
-      dispatch(state.tr.replaceSelectionWith(br.create()).scrollIntoView())
+      if (dispatch) dispatch(state.tr.replaceSelectionWith(br.create()).scrollIntoView())
       return true
     })
     bind("Mod-Enter", cmd)
@@ -96,7 +96,7 @@ export function buildKeymap(schema, mapKeys) {
   if (type = schema.nodes.horizontal_rule) {
     let hr = type
     bind("Mod-_", (state, dispatch) => {
-      dispatch(state.tr.replaceSelectionWith(hr.create()).scrollIntoView())
+      if (dispatch) dispatch(state.tr.replaceSelectionWith(hr.create()).scrollIntoView())
       return true
     })
   }

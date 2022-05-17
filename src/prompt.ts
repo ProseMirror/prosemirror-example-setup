@@ -1,17 +1,23 @@
+import {Attrs} from "prosemirror-model"
+
 const prefix = "ProseMirror-prompt"
 
-export function openPrompt(options) {
+export function openPrompt(options: {
+  title: string,
+  fields: {[name: string]: Field},
+  callback: (attrs: Attrs) => void
+}) {
   let wrapper = document.body.appendChild(document.createElement("div"))
   wrapper.className = prefix
 
-  let mouseOutside = e => { if (!wrapper.contains(e.target)) close() }
+  let mouseOutside = (e: MouseEvent) => { if (!wrapper.contains(e.target as HTMLElement)) close() }
   setTimeout(() => window.addEventListener("mousedown", mouseOutside), 50)
   let close = () => {
     window.removeEventListener("mousedown", mouseOutside)
     if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper)
   }
 
-  let domFields = []
+  let domFields: HTMLElement[] = []
   for (let name in options.fields) domFields.push(options.fields[name].render())
 
   let submitButton = document.createElement("button")
@@ -66,11 +72,11 @@ export function openPrompt(options) {
     }
   })
 
-  let input = form.elements[0]
+  let input = form.elements[0] as HTMLElement
   if (input) input.focus()
 }
 
-function getValues(fields, domFields) {
+function getValues(fields: {[name: string]: Field}, domFields: readonly HTMLElement[]) {
   let result = Object.create(null), i = 0
   for (let name in fields) {
     let field = fields[name], dom = domFields[i++]
@@ -84,9 +90,9 @@ function getValues(fields, domFields) {
   return result
 }
 
-function reportInvalid(dom, message) {
+function reportInvalid(dom: HTMLElement, message: string) {
   // FIXME this is awful and needs a lot more work
-  let parent = dom.parentNode
+  let parent = dom.parentNode!
   let msg = parent.appendChild(document.createElement("div"))
   msg.style.left = (dom.offsetLeft + dom.offsetWidth + 2) + "px"
   msg.style.top = (dom.offsetTop - 5) + "px"
@@ -95,49 +101,53 @@ function reportInvalid(dom, message) {
   setTimeout(() => parent.removeChild(msg), 1500)
 }
 
-// ::- The type of field that `FieldPrompt` expects to be passed to it.
-export class Field {
-  // :: (Object)
-  // Create a field with the given options. Options support by all
-  // field types are:
-  //
-  // **`value`**`: ?any`
-  //   : The starting value for the field.
-  //
-  // **`label`**`: string`
-  //   : The label for the field.
-  //
-  // **`required`**`: ?bool`
-  //   : Whether the field is required.
-  //
-  // **`validate`**`: ?(any) → ?string`
-  //   : A function to validate the given value. Should return an
-  //     error message if it is not valid.
-  constructor(options) { this.options = options }
+/// The type of field that `openPrompt` expects to be passed to it.
+export abstract class Field {
+  /// Create a field with the given options. Options support by all
+  /// field types are:
+  constructor(
+    /// @internal
+    readonly options: {
+      /// The starting value for the field.
+      value?: any
 
-  // render:: (state: EditorState, props: Object) → dom.Node
-  // Render the field to the DOM. Should be implemented by all subclasses.
+      /// The label for the field.
+      label: string
 
-  // :: (dom.Node) → any
-  // Read the field's value from its DOM node.
-  read(dom) { return dom.value }
+      /// Whether the field is required.
+      required?: boolean
 
-  // :: (any) → ?string
-  // A field-type-specific validation function.
-  validateType(_value) {}
+      /// A function to validate the given value. Should return an
+      /// error message if it is not valid.
+      validate?: (value: any) => string | null
 
-  validate(value) {
+      /// A cleanup function for field values.
+      clean?: (value: any) => any
+    }
+  ) {}
+
+  /// Render the field to the DOM. Should be implemented by all subclasses.
+  abstract render(): HTMLElement
+
+  /// Read the field's value from its DOM node.
+  read(dom: HTMLElement) { return (dom as any).value }
+
+  /// A field-type-specific validation function.
+  validateType(value: any): string | null { return null }
+
+  /// @internal
+  validate(value: any): string | null {
     if (!value && this.options.required)
       return "Required field"
-    return this.validateType(value) || (this.options.validate && this.options.validate(value))
+    return this.validateType(value) || (this.options.validate ? this.options.validate(value) : null)
   }
 
-  clean(value) {
+  clean(value: any): any {
     return this.options.clean ? this.options.clean(value) : value
   }
 }
 
-// ::- A field class for single-line text fields.
+/// A field class for single-line text fields.
 export class TextField extends Field {
   render() {
     let input = document.createElement("input")
@@ -150,14 +160,14 @@ export class TextField extends Field {
 }
 
 
-// ::- A field class for dropdown fields based on a plain `<select>`
-// tag. Expects an option `options`, which should be an array of
-// `{value: string, label: string}` objects, or a function taking a
-// `ProseMirror` instance and returning such an array.
+/// A field class for dropdown fields based on a plain `<select>`
+/// tag. Expects an option `options`, which should be an array of
+/// `{value: string, label: string}` objects, or a function taking a
+/// `ProseMirror` instance and returning such an array.
 export class SelectField extends Field {
   render() {
     let select = document.createElement("select")
-    this.options.options.forEach(o => {
+    ;((this.options as any).options as {value: string, label: string}[]).forEach(o => {
       let opt = select.appendChild(document.createElement("option"))
       opt.value = o.value
       opt.selected = o.value == this.options.value
