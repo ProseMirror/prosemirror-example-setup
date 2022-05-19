@@ -25,154 +25,157 @@ is the place to report issues.
 
 ## Documentation
 
-This module exports the following items:
+This module exports helper functions for deriving a set of basic menu
+items, input rules, or key bindings from a schema. These values need
+to know about the schema for two reasons—they need access to specific
+instances of node and mark types, and they need to know which of the
+node and mark types that they know about are actually present in the
+schema.
 
-**`exampleSetup`**`(options: Object) → [Plugin]`
+ * **`exampleSetup`**`(options: Object) → Plugin[]`\
+   Create an array of plugins pre-configured for the given schema.
+   The resulting array will include the following plugins:
 
-Create an array of plugins pre-configured for the given schema. The
-resulting array will include the following plugins:
+    * Input rules for smart quotes and creating the block types in the
+      schema using markdown conventions (say `"> "` to create a
+      blockquote)
 
- * Input rules for smart quotes and creating the block types in the
-   schema using markdown conventions (say `"> "` to create a
-   blockquote)
+    * A keymap that defines keys to create and manipulate the nodes in the
+      schema
 
- * A keymap that defines keys to create and manipulate the nodes in the
-   schema
+    * A keymap binding the default keys provided by the
+      prosemirror-commands module
 
- * A keymap binding the default keys provided by the
-   prosemirror-commands module
+    * The undo history plugin
 
- * The undo history plugin
+    * The drop cursor plugin
 
- * The drop cursor plugin
+    * The gap cursor plugin
 
- * The gap cursor plugin
+    * A custom plugin that adds a `menuContent` prop for the
+      prosemirror-menu wrapper, and a CSS class that enables the
+      additional styling defined in `style/style.css` in this package
 
- * A custom plugin that adds a `menuContent` prop for the
-   prosemirror-menu wrapper, and a CSS class that enables the
-   additional styling defined in `style/style.css` in this package
+   Probably only useful for quickly setting up a passable
+   editor—you'll need more control over your settings in most
+   real-world situations.
 
-These options are supported:
+    * **`options`**`: Object`
 
- * **`schema`**`: Schema`\
-   The schema to use. This influences the menu items and key bindings
-   that are generated. Assumes that node names correspond to those in
-   the schema modules in the main distribution.
+       * **`schema`**`: Schema`\
+         The schema to generate key bindings and menu items for.
 
- * **`mapKeys`**`: ?Object`\
-   Can be used to [adjust](#build-key-map) the key
-   bindings created.
+       * **`mapKeys`**`?: Object`\
+         Can be used to [adjust](#example-setup.buildKeymap) the key bindings created.
 
- * **`menuBar`**`: ?bool`\
-   Set to false to disable the menu bar.
+       * **`menuBar`**`?: boolean`\
+         Set to false to disable the menu bar.
 
- * **`floatingMenu`**`: ?bool`\
-   Set to false to make the menu bar non-floating.
+       * **`history`**`?: boolean`\
+         Set to false to disable the history plugin.
 
- * **`menuContent`**`: [[MenuItem]]`\
-   Can be used to override the menu content.
+       * **`floatingMenu`**`?: boolean`\
+         Set to false to make the menu bar non-floating.
 
- * **`history`**: ?bool\
-   Set this to `false` to disable adding the history plugin to the
-   result.
+       * **`menuContent`**`?: MenuItem[][]`\
+         Can be used to override the menu content.
 
-**`buildMenuItems`**(schema: Schema) → Object
 
-Given a schema, look for default mark and node types in it and
-return an object with relevant menu items relating to those marks:
+ * **`buildMenuItems`**`(schema: Schema) → {makeHead2?: MenuItem, makeHead3?: MenuItem, makeHead4?: MenuItem, makeHead5?: MenuItem, makeHead6?: MenuItem}`\
+   Given a schema, look for default mark and node types in it and
+   return an object with relevant menu items relating to those marks.
 
- * **`toggleStrong`**`: MenuItem`\
-   A menu item to toggle the [strong mark](#schema-basic.StrongMark).
+    * **`returns`**`: {makeHead2?: MenuItem, makeHead3?: MenuItem, makeHead4?: MenuItem, makeHead5?: MenuItem, makeHead6?: MenuItem}`
 
- * **`toggleEm`**`: MenuItem`\
-   A menu item to toggle the [emphasis mark](#schema-basic.EmMark).
+       * **`toggleStrong`**`?: MenuItem`\
+         A menu item to toggle the [strong mark](#schema-basic.StrongMark).
 
- * **`toggleCode`**`: MenuItem`\
-   A menu item to toggle the [code font mark](#schema-basic.CodeMark).
+       * **`toggleEm`**`?: MenuItem`\
+         A menu item to toggle the [emphasis mark](#schema-basic.EmMark).
 
- * **`toggleLink`**`: MenuItem`\
-   A menu item to toggle the [link mark](#schema-basic.LinkMark).
+       * **`toggleCode`**`?: MenuItem`\
+         A menu item to toggle the [code font mark](#schema-basic.CodeMark).
 
- * **`insertImage`**`: MenuItem`\
-   A menu item to insert an [image](#schema-basic.Image).
+       * **`toggleLink`**`?: MenuItem`\
+         A menu item to toggle the [link mark](#schema-basic.LinkMark).
 
- * **`wrapBulletList`**`: MenuItem`\
-   A menu item to wrap the selection in a [bullet list](#schema-list.BulletList).
+       * **`insertImage`**`?: MenuItem`\
+         A menu item to insert an [image](#schema-basic.Image).
 
- * **`wrapOrderedList`**`: MenuItem`\
-   A menu item to wrap the selection in an [ordered list](#schema-list.OrderedList).
+       * **`wrapBulletList`**`?: MenuItem`\
+         A menu item to wrap the selection in a [bullet list](#schema-list.BulletList).
 
- * **`wrapBlockQuote`**`: MenuItem`\
-   A menu item to wrap the selection in a [block quote](#schema-basic.BlockQuote).
+       * **`wrapOrderedList`**`?: MenuItem`\
+         A menu item to wrap the selection in an [ordered list](#schema-list.OrderedList).
 
- * **`makeParagraph`**`: MenuItem`\
-   A menu item to set the current textblock to be a normal
-   [paragraph](#schema-basic.Paragraph).
+       * **`wrapBlockQuote`**`?: MenuItem`\
+         A menu item to wrap the selection in a [block quote](#schema-basic.BlockQuote).
 
- * **`makeCodeBlock`**`: MenuItem`\
-   A menu item to set the current textblock to be a
-   [code block](#schema-basic.CodeBlock).
+       * **`makeParagraph`**`?: MenuItem`\
+         A menu item to set the current textblock to be a normal
+         [paragraph](#schema-basic.Paragraph).
 
- * **`insertTable`**`: MenuItem`\
-   An item to insert a [table](#schema-table).
+       * **`makeCodeBlock`**`?: MenuItem`\
+         A menu item to set the current textblock to be a
+         [code block](#schema-basic.CodeBlock).
 
- * **`addRowBefore`**, **`addRowAfter`**, **`removeRow`**, **`addColumnBefore`**, **`addColumnAfter`**, **`removeColumn`**`: MenuItem`\
-   Table-manipulation items.
+       * **`makeHead1`**`?: MenuItem`\
+         Menu items to set the current textblock to be a
+         [heading](#schema-basic.Heading) of level _N_.
 
- * **`makeHead[N]`**`: MenuItem`\
-   Where _N_ is 1 to 6. Menu items to set the current textblock to
-   be a [heading](#schema-basic.Heading) of level _N_.
+       * **`insertHorizontalRule`**`?: MenuItem`\
+         A menu item to insert a horizontal rule.
 
- * **`insertHorizontalRule`**`: MenuItem`\
-   A menu item to insert a horizontal rule.
+       * **`insertMenu`**`: Dropdown`\
+         A dropdown containing the `insertImage` and
+         `insertHorizontalRule` items.
 
-The return value also contains some prefabricated menu elements and
-menus, that you can use instead of composing your own menu from
-scratch:
+       * **`typeMenu`**`: Dropdown`\
+         A dropdown containing the items for making the current
+         textblock a paragraph, code block, or heading.
 
- * **`insertMenu`**`: Dropdown`\
-   A dropdown containing the `insertImage` and
-   `insertHorizontalRule` items.
+       * **`blockMenu`**`: MenuElement[][]`\
+         Array of block-related menu items.
 
- * **`typeMenu`**`: Dropdown`\
-   A dropdown containing the items for making the current
-   textblock a paragraph, code block, or heading.
+       * **`inlineMenu`**`: MenuElement[][]`\
+         Inline-markup related menu items.
 
- * **`fullMenu`**`: [[MenuElement]]`\
-   An array of arrays of menu elements for use as the full menu
-   for, for example the [menu bar](#menu.MenuBarEditorView).
+       * **`fullMenu`**`: MenuElement[][]`\
+         An array of arrays of menu elements for use as the full menu
+         for, for example the [menu
+         bar](https://github.com/prosemirror/prosemirror-menu#user-content-menubar).
 
-<a name="build-key-map"></a>**`buildKeymap`**`(schema: Schema, remap: ?Object) → Object`
 
-Inspect the given schema looking for marks and nodes from the
-basic schema, and if found, add key bindings related to them.
-This will add:
+ * **`buildKeymap`**`(schema: Schema, mapKeys: Object) → Object`\
+   Inspect the given schema looking for marks and nodes from the
+   basic schema, and if found, add key bindings related to them.
+   This will add:
 
-* **Mod-b** for toggling [strong](#schema-basic.StrongMark)
-* **Mod-i** for toggling [emphasis](#schema-basic.EmMark)
-* **Mod-`** for toggling [code font](#schema-basic.CodeMark)
-* **Ctrl-Shift-0** for making the current textblock a paragraph
-* **Ctrl-Shift-1** to **Ctrl-Shift-Digit6** for making the current
-  textblock a heading of the corresponding level
-* **Ctrl-Shift-Backslash** to make the current textblock a code block
-* **Ctrl-Shift-8** to wrap the selection in an ordered list
-* **Ctrl-Shift-9** to wrap the selection in a bullet list
-* **Ctrl->** to wrap the selection in a block quote
-* **Enter** to split a non-empty textblock in a list item while at
-  the same time splitting the list item
-* **Mod-Enter** to insert a hard break
-* **Mod-_** to insert a horizontal rule
+   * **Mod-b** for toggling [strong](#schema-basic.StrongMark)
+   * **Mod-i** for toggling [emphasis](#schema-basic.EmMark)
+   * **Mod-`** for toggling [code font](#schema-basic.CodeMark)
+   * **Ctrl-Shift-0** for making the current textblock a paragraph
+   * **Ctrl-Shift-1** to **Ctrl-Shift-Digit6** for making the current
+     textblock a heading of the corresponding level
+   * **Ctrl-Shift-Backslash** to make the current textblock a code block
+   * **Ctrl-Shift-8** to wrap the selection in an ordered list
+   * **Ctrl-Shift-9** to wrap the selection in a bullet list
+   * **Ctrl->** to wrap the selection in a block quote
+   * **Enter** to split a non-empty textblock in a list item while at
+     the same time splitting the list item
+   * **Mod-Enter** to insert a hard break
+   * **Mod-_** to insert a horizontal rule
+   * **Backspace** to undo an input rule
+   * **Alt-ArrowUp** to `joinUp`
+   * **Alt-ArrowDown** to `joinDown`
+   * **Mod-BracketLeft** to `lift`
+   * **Escape** to `selectParentNode`
 
-You can suppress or map these bindings by passing a `mapKeys`
-argument, which maps key names (say `"Mod-B"` to either `false`, to
-remove the binding, or a new key name string.
+   You can suppress or map these bindings by passing a `mapKeys`
+   argument, which maps key names (say `"Mod-B"` to either `false`, to
+   remove the binding, or a new key name string.
 
-**`buildInputRules`**`(schema: Schema) → [InputRule]`
 
-A set of input rules for creating the basic block quotes, lists,
-code blocks, and heading.
-
-We aim to be an inclusive, welcoming community. To make that explicit,
-we have a [code of
-conduct](http://contributor-covenant.org/version/1/1/0/) that applies
-to communication around the project.
+ * **`buildInputRules`**`(schema: Schema) → Plugin`\
+   A set of input rules for creating the basic block quotes, lists,
+   code blocks, and heading.

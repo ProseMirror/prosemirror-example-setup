@@ -13,8 +13,29 @@ import {buildInputRules} from "./inputrules"
 
 export {buildMenuItems, buildKeymap, buildInputRules}
 
-/// A convenience plugin that bundles together a simple menu with basic
-/// key bindings, input rules, and styling for the example schema.
+/// Create an array of plugins pre-configured for the given schema.
+/// The resulting array will include the following plugins:
+///
+///  * Input rules for smart quotes and creating the block types in the
+///    schema using markdown conventions (say `"> "` to create a
+///    blockquote)
+/// 
+///  * A keymap that defines keys to create and manipulate the nodes in the
+///    schema
+/// 
+///  * A keymap binding the default keys provided by the
+///    prosemirror-commands module
+/// 
+///  * The undo history plugin
+/// 
+///  * The drop cursor plugin
+/// 
+///  * The gap cursor plugin
+/// 
+///  * A custom plugin that adds a `menuContent` prop for the
+///    prosemirror-menu wrapper, and a CSS class that enables the
+///    additional styling defined in `style/style.css` in this package
+///
 /// Probably only useful for quickly setting up a passable
 /// editor—you'll need more control over your settings in most
 /// real-world situations.
