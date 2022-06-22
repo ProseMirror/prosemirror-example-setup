@@ -13,7 +13,7 @@
     },
     "./style/style.css": "./style/style.css"
   },
-  "sideEffects": false,
+  "sideEffects": ["./style/style.css"],
   "style": "style/style.css",
   "license": "MIT",
   "maintainers": [
