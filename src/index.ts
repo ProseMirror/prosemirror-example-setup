@@ -4,7 +4,7 @@ import {baseKeymap} from "prosemirror-commands"
 import {Plugin} from "prosemirror-state"
 import {dropCursor} from "prosemirror-dropcursor"
 import {gapCursor} from "prosemirror-gapcursor"
-import {menuBar, MenuItem} from "prosemirror-menu"
+import {menuBar, MenuElement} from "prosemirror-menu"
 import {Schema} from "prosemirror-model"
 
 import {buildMenuItems} from "./menu"
@@ -19,19 +19,19 @@ export {buildMenuItems, buildKeymap, buildInputRules}
 ///  * Input rules for smart quotes and creating the block types in the
 ///    schema using markdown conventions (say `"> "` to create a
 ///    blockquote)
-/// 
+///
 ///  * A keymap that defines keys to create and manipulate the nodes in the
 ///    schema
-/// 
+///
 ///  * A keymap binding the default keys provided by the
 ///    prosemirror-commands module
-/// 
+///
 ///  * The undo history plugin
-/// 
+///
 ///  * The drop cursor plugin
-/// 
+///
 ///  * The gap cursor plugin
-/// 
+///
 ///  * A custom plugin that adds a `menuContent` prop for the
 ///    prosemirror-menu wrapper, and a CSS class that enables the
 ///    additional styling defined in `style/style.css` in this package
@@ -56,7 +56,7 @@ export function exampleSetup(options: {
   floatingMenu?: boolean
 
   /// Can be used to override the menu content.
-  menuContent?: MenuItem[][]
+  menuContent?: MenuElement[][]
 }) {
   let plugins = [
     buildInputRules(options.schema),
