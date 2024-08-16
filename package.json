@@ -1,6 +1,6 @@
 {
   "name": "prosemirror-example-setup",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "An example for how to set up a ProseMirror editor",
   "type": "module",
   "main": "dist/index.cjs",

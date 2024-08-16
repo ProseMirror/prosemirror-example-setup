@@ -1,3 +1,9 @@
+## 1.2.3 (2024-08-16)
+
+### Bug fixes
+
+Make the type of the `fullMenu` option `MenuElement[][]` instead of `MenuItem[][]`.
+
 ## 1.2.2 (2023-05-17)
 
 ### Bug fixes
