@@ -28,6 +28,14 @@
   cursor: default;
 }
 
+.ProseMirror-menu-dropdown-wrap {
+  display: inline-block;
+}
+
+.ProseMirror-icon svg {
+  height: 1em;
+}
+
 .ProseMirror-prompt {
   background: white;
   padding: 5px 10px 5px 15px;
