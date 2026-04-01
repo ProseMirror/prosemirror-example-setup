@@ -1,6 +1,6 @@
 # prosemirror-example-setup
 
-[ [**WEBSITE**](https://prosemirror.net) | [**ISSUES**](https://github.com/prosemirror/prosemirror-example-setup/issues) | [**FORUM**](https://discuss.prosemirror.net) | [**GITTER**](https://gitter.im/ProseMirror/prosemirror) ]
+[ [**WEBSITE**](https://prosemirror.net) | [**ISSUES**](https://code.haverbeke.berlin/prosemirror/prosemirror-example-setup/issues) | [**FORUM**](https://discuss.prosemirror.net) | [**GITTER**](https://gitter.im/ProseMirror/prosemirror) ]
 
 This is a non-core example module for [ProseMirror](https://prosemirror.net).
 ProseMirror is a well-behaved rich semantic content editor based on
@@ -17,10 +17,10 @@ number of [examples](https://prosemirror.net/examples/) and the
 [documentation](https://prosemirror.net/docs/).
 
 This code is released under an
-[MIT license](https://github.com/prosemirror/prosemirror/tree/master/LICENSE).
+[MIT license](https://code.haverbeke.berlin/prosemirror/prosemirror/src/branch/main/LICENSE).
 There's a [forum](http://discuss.prosemirror.net) for general
 discussion and support requests, and the
-[Github bug tracker](https://github.com/prosemirror/prosemirror-example-setup/issues)
+[bug tracker](https://code.haverbeke.berlin/prosemirror/prosemirror-example-setup/issues)
 is the place to report issues.
 
 ## Documentation
@@ -143,7 +143,7 @@ schema.
        * **`fullMenu`**`: MenuElement[][]`\
          An array of arrays of menu elements for use as the full menu
          for, for example the [menu
-         bar](https://github.com/prosemirror/prosemirror-menu#user-content-menubar).
+         bar](https://code.haverbeke.berlin/prosemirror/prosemirror-menu#user-content-menubar).
 
 
  * **`buildKeymap`**`(schema: Schema, mapKeys: Object) → Object`\

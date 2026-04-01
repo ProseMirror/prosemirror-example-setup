@@ -163,7 +163,7 @@ type MenuItemResult = {
 
   /// An array of arrays of menu elements for use as the full menu
   /// for, for example the [menu
-  /// bar](https://github.com/prosemirror/prosemirror-menu#user-content-menubar).
+  /// bar](https://code.haverbeke.berlin/prosemirror/prosemirror-menu).
   fullMenu: MenuElement[][]
 }
 
